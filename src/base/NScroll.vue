@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import BScroll from 'better-scroll'
+  import BScroll from '@better-scroll/core'
 
   export default {
     name: 'NScroll',
@@ -20,33 +20,42 @@
       },
       data: {
         type: Array,
+        required: true,
         default: null
-      },
-      refreshDelay: {
-        type: Number,
-        default: 20
       }
     },
     mounted() {
       setTimeout(() => {
-        this._initScroll()
-      }, 20)
+        this.initScroll()
+        this.emitScrollEvent()
+      }, 60)
     },
     methods: {
-      _initScroll() {
-        if (!this.$refs.wrapper) {
-          return
-        }
+      initScroll() {
         this.scroll = new BScroll(this.$refs.wrapper, {
-          probeType: this.probeType,
-          click: this.click
+          scrollY: true,
+          click: true,
+          probeType: 3
         })
       },
-      disable() {
-        this.scroll && this.scroll.disable()
+      emitScrollEvent(){
+        let scrollHandler = this.throttle((e) => {
+          this.$emit('scroll', e, {
+            maxScrollY: this.scroll.maxScrollY,
+            maxScrollX: this.scroll.maxScrollX
+          })
+        })
+
+        this.scroll.on('scroll', scrollHandler)
       },
-      enable() {
-        this.scroll && this.scroll.enable()
+      throttle(fn){
+        let timer = null
+        return (args) => {
+          !timer && (timer = setTimeout(() => {
+            fn.call(this, args)
+            timer = null
+          }, 300))
+        }
       },
       refresh() {
         this.scroll && this.scroll.refresh()
@@ -54,9 +63,10 @@
     },
     watch: {
       data() {
-        setTimeout(() => {
+        !this.timer && (this.timer = setTimeout(() => {
           this.refresh()
-        }, 20)
+          this.timer = null
+        }, 60))
       }
     }
   }

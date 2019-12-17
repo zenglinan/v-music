@@ -1,7 +1,7 @@
 <template>
   <div id="recommand">
-    <div class="wrapper" ref="wrapper">
-      <div class="content">
+    <n-scroll :data="hotSongList" class="wrapper" @scroll="listenToScroll">
+      <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
             <swiper-slide v-for="(item, idx) in banners" :key="idx">
@@ -19,13 +19,14 @@
           </header>
           <ul class="list">
             <li class="listItem" v-for="(item, idx) in hotSongList" :key="idx">
-              <img :src="item.coverImgUrl" alt="image">
+              <img v-lazy="item.coverImgUrl" alt="image">
               <p>{{item.name}}</p>
             </li>
           </ul>
         </div>
       </div>
-    </div>
+    </n-scroll>
+    <n-loading v-show="hotSongList.length===0"></n-loading>
   </div>
 </template>
 
@@ -33,7 +34,8 @@
   import 'swiper/dist/css/swiper.css'
   import {getBanners, getHotSongList} from '@/api/recommand'
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
-  import BScroll from '@better-scroll/core'
+  import NScroll from '@/base/NScroll'
+  import NLoading from '@/base/NLoading'
 
   export default {
     name: "Recommand",
@@ -57,10 +59,13 @@
     components: {
       swiper,
       swiperSlide,
+      NScroll,
+      NLoading
     },
     mounted() {
       this._getBanners()
       this._getHotSongList()
+      this.listenToScroll()
     },
     methods: {
       _getBanners() {
@@ -69,11 +74,8 @@
         })
       },
       _getHotSongList() {
-        getHotSongList(600).then(res => {  // 获取指定条数的条歌单
-          this.hotSongList = res.data.playlists
-          this.$nextTick(() => {  // 用 nextTick 确保可以在获取完所有数据，并渲染后进行计算高度
-            this.initScroll()
-          })
+        getHotSongList(21).then(res => {  // 获取指定条数的条歌单
+          this.hotSongList.push(...res.data.playlists)
         })
       },
       initScroll() {
@@ -92,6 +94,11 @@
         if (!this.checkLoaded) {
           this.scroll && this.scroll.refresh()
           this.checkLoaded = true
+        }
+      },
+      listenToScroll({y: posY} = {}, {maxScrollY} = {}){
+        if(posY < maxScrollY + 60){
+          this._getHotSongList()
         }
       }
     },
