@@ -1,28 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Mine from '../components/Mine'
-import MVideo from '../components/MVideo'
-import NewSongs from '../components/NewSongs'
-import Recommand from '../components/Recommand'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/mine',
-    component: Mine
+    component: () => import('../components/Mine')
   },
   {
     path: '/mvideo',
-    component: MVideo
+    component: () => import('../components/MVideo')
   },
   {
-    path: '/newsongs',
-    component: NewSongs
+    path: '/singer',
+    component: () => import('../components/Singer')
   },
   {
     path: '/recommand',
-    component: Recommand
+    component: () => import('../components/Recommand')
   },
   {
     path: "*",

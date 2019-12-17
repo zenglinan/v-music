@@ -6,9 +6,9 @@
     <div class="title">
       <ul>
         <li><router-link tag="div" to="/recommand">推荐</router-link></li>
+        <li><router-link tag="div" to="/singer">歌手</router-link></li>
+        <li><router-link tag="div" to="/mvideo">MV</router-link></li>
         <li><router-link tag="div" to="/mine">我的</router-link></li>
-        <li><router-link tag="div" to="/newsongs">新歌</router-link></li>
-        <li><router-link tag="div" to="/mvideo">视频</router-link></li>
       </ul>
     </div>
     <div class="search">

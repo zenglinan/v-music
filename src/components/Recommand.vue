@@ -78,13 +78,6 @@
           this.hotSongList.push(...res.data.playlists)
         })
       },
-      initScroll() {
-        this.scroll = new BScroll(this.$refs.wrapper, {
-          scrollY: true,
-          click: true,
-          probeType: 3
-        })
-      },
       initSwiper() {
         if (this.banners.length > 1) {
           this.swiper.init();
