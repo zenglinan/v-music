@@ -126,3 +126,27 @@ this.modifyStyle(this.$refs.bgImg, {
         })
 ```
 同时，要注意设置：transform-origin: top; 保证从头部开始往下拉伸
+
+17. scss：@mixin 和 @extend 的区别
+@mixin 可以传递参数，@extend 不能。但 @extend 可以把多个元素的共享样式写成多元素选择器形式，如下：
+
+@mixin
+```sass
+.button {
+  background: red;
+}
+
+.button1 {
+  @extend button
+}
+.button2 {
+  @extend button
+}
+
+/*会变成*/
+.button1, .button2 {
+  background: red;
+} 
+```
+
+18. 优化：当偏移数据已经全部返回完之后，下滑到底也不再进行请求

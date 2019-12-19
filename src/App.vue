@@ -2,7 +2,9 @@
   <div id="app">
     <n-header></n-header>
     <keep-alive>
-      <router-view></router-view>
+      <transition name="fade">
+        <router-view></router-view>
+      </transition>
     </keep-alive>
   </div>
 </template>
@@ -18,6 +20,8 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import "@/common/scss/mixin.scss";
 
+  @include fade;
 </style>

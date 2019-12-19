@@ -3,7 +3,6 @@
     <transition name="slide-fade">
       <router-view></router-view>
     </transition>
-
     <header class="header">
       <p>全部歌手</p>
       <div class="filter">
@@ -13,7 +12,7 @@
     </header>
     <div class="list">
       <header>热门歌手</header>
-      <n-scroll :data="hotSingers" class="wrapper" :probe-type="1" @scroll="listenToScroll">
+      <n-scroll :data="hotSingers" class="wrapper" :probe-type="3" @scroll="listenToScroll">
         <ul>
           <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
               @click="toSingerDetail(item)">
@@ -26,6 +25,7 @@
         </ul>
       </n-scroll>
     </div>
+    <n-loading v-show="!hotSingers.length" class="loading"></n-loading>
   </div>
 </template>
 
@@ -33,6 +33,7 @@
   import {getHotSingers} from '@/api/singer'
   import NIcon from '@/base/NIcon'
   import NScroll from '@/base/NScroll'
+  import NLoading from '@/base/NLoading'
   import {mapMutations} from 'vuex'
 
   export default {
@@ -44,7 +45,8 @@
     },
     components: {
       NIcon,
-      NScroll
+      NScroll,
+      NLoading
     },
     mounted() {
       this._getHotSingers(12)
@@ -52,11 +54,14 @@
     methods: {
       _getHotSingers(limit) {
         getHotSingers(limit).then(res => {
+          if(!res.data.artists.length){
+            this.listenToScroll = null
+          }
           this.hotSingers.push(...res.data.artists) // 每次将请求的数据拼接进数组
         })
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
-        if (posY < maxScrollY + 200) {
+        if (posY < maxScrollY + 100) {
           this._getHotSingers(12)
         }
       },
@@ -75,15 +80,9 @@
 
 <style scoped lang="scss">
   @import "@/common/scss/variable.scss";
+  @import "@/common/scss/mixin.scss";
 
-  .slide-fade-enter-active, .slide-fade-leave-active{
-    transition: all .5s;
-  }
-
-  .slide-fade-enter, .slide-fade-leave-to{
-    opacity: 0;
-    transform: translateX(100%);
-  }
+  @include slide;
 
   #singer {
     font-size: $font-size-medium-x;
@@ -149,5 +148,12 @@
       }
 
     }
+  }
+
+  .loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 </style>

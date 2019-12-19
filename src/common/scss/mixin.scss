@@ -1,0 +1,20 @@
+@mixin slide {
+  .slide-fade-enter-active, .slide-fade-leave-active {
+    transition: all .5s;
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@mixin fade {
+  .fade-enter-active, .fade-leave-active {
+    transition: all .3s;
+  }
+
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+}

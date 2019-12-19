@@ -75,6 +75,9 @@
       },
       _getHotSongList() {
         getHotSongList(21).then(res => {  // 获取指定条数的条歌单
+          if(!res.data.playlists.length){
+            this.listenToScroll = null
+          }
           this.hotSongList.push(...res.data.playlists)
         })
       },
