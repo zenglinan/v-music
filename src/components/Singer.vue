@@ -12,7 +12,7 @@
     </header>
     <div class="list">
       <header>热门歌手</header>
-      <n-scroll :data="hotSingers" class="wrapper" :probe-type="3" @scroll="listenToScroll">
+      <n-scroll :data="hotSingers" class="wrapper" :probe-type="1" @scroll="listenToScroll">
         <ul>
           <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
               @click="toSingerDetail(item)">
@@ -22,6 +22,7 @@
             </div>
             <div class="follow">+ 关注</div>
           </li>
+          <n-loading v-show="loadingMore" class="loadingMore"></n-loading>
         </ul>
       </n-scroll>
     </div>
@@ -40,7 +41,9 @@
     name: "NewSongs",
     data() {
       return {
-        hotSingers: []
+        hotSingers: [],
+        loadingMore: false,
+        allowToLoad: true
       }
     },
     components: {
@@ -53,15 +56,20 @@
     },
     methods: {
       _getHotSingers(limit) {
+        console.log(1);
         getHotSingers(limit).then(res => {
           if(!res.data.artists.length){
-            this.listenToScroll = null
+            this.listenToScroll = ()=>{}
           }
+          this.allowToLoad = true
+          this.loadingMore = false // 关闭加载动画
           this.hotSingers.push(...res.data.artists) // 每次将请求的数据拼接进数组
         })
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
-        if (posY < maxScrollY + 100) {
+        if (posY < maxScrollY + 20 && this.allowToLoad) {
+          this.loadingMore = true // 开启加载动画
+          this.allowToLoad = false
           this._getHotSingers(12)
         }
       },
@@ -83,6 +91,7 @@
   @import "@/common/scss/mixin.scss";
 
   @include slide;
+  @include loading;
 
   #singer {
     font-size: $font-size-medium-x;
@@ -150,10 +159,9 @@
     }
   }
 
-  .loading {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .loadingMore {
+    margin-top: 20px;
+    text-align: center;
+    font-size: $font-size-large-x;
   }
 </style>

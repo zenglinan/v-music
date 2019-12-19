@@ -24,9 +24,10 @@
             </li>
           </ul>
         </div>
+        <n-loading v-show="loadingMore" class="loadingMore"></n-loading>
       </div>
     </n-scroll>
-    <n-loading v-show="hotSongList.length===0"></n-loading>
+    <n-loading v-show="!hotSongList.length" class="loading"></n-loading>
   </div>
 </template>
 
@@ -43,6 +44,8 @@
       return {
         banners: {},
         hotSongList: [],
+        loadingMore: false,
+        allowToLoad: true,
         swiperOption: {
           pagination: {
             el: '.swiper-pagination'
@@ -75,9 +78,11 @@
       },
       _getHotSongList() {
         getHotSongList(21).then(res => {  // 获取指定条数的条歌单
-          if(!res.data.playlists.length){
+          if (!res.data.playlists.length) {
             this.listenToScroll = null
           }
+          this.allowToLoad = true
+          this.loadingMore = false // 关闭加载动画
           this.hotSongList.push(...res.data.playlists)
         })
       },
@@ -92,8 +97,10 @@
           this.checkLoaded = true
         }
       },
-      listenToScroll({y: posY} = {}, {maxScrollY} = {}){
-        if(posY < maxScrollY + 200){
+      listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
+        if (posY < maxScrollY + 20 && this.allowToLoad) {
+          this.loadingMore = true // 开启加载动画
+          this.allowToLoad = false
           this._getHotSongList()
         }
       }
@@ -111,6 +118,9 @@
 
 <style scoped lang="scss">
   @import "@/common/scss/variable.scss";
+  @import "@/common/scss/mixin.scss";
+
+  @include loading;
 
   #recommand {
     .wrapper {
@@ -181,5 +191,11 @@
       }
     }
 
+  }
+
+  .loadingMore {
+    margin-top: 20px;
+    text-align: center;
+    font-size: $font-size-large-x;
   }
 </style>

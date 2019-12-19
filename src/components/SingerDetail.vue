@@ -170,6 +170,9 @@
 
 <style scoped lang="scss">
   @import "@/common/scss/variable.scss";
+  @import "@/common/scss/mixin.scss";
+
+  @include loading;
 
   .wrapper {
     position: fixed;
@@ -258,9 +261,5 @@
         }
       }
     }
-  }
-
-  .loading {
-    z-index: 100;
   }
 </style>

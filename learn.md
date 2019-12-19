@@ -150,3 +150,12 @@ this.modifyStyle(this.$refs.bgImg, {
 ```
 
 18. 优化：当偏移数据已经全部返回完之后，下滑到底也不再进行请求
+19，开启加载的同时要限制关闭加载标志位，防止多次触发 scroll ，一次下拉到底产生多次加载
+```javascript
+if (posY < maxScrollY + 20 && this.allowToLoad) {
+  this.loadingMore = true // 开启加载动画
+  this.allowToLoad = false  // 是否允许加载的标志位
+  this._getHotSongList()
+}
+```
+本次加载完成后，将该标志位重新置位

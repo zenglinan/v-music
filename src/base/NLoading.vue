@@ -1,5 +1,5 @@
 <template>
-  <div class="loading">
+  <div>
     <n-icon href="loading" class="icon"></n-icon>
   </div>
 </template>
@@ -25,13 +25,7 @@
     }
   }
 
-  .loading{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: $font-size-large-x;
-  }
+
   .icon {
     animation: rotate .5s linear infinite ;
   }
