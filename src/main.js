@@ -6,9 +6,9 @@ import "./common/scss/index.scss"
 import VueLazyload from 'vue-lazyload'
 
 Vue.use(VueLazyload, {
-  preLoad: 1,
-  error: './common/images/lazy.png',
-  loading: require('./common/images/lazy.png'),
+  preLoad: 1.2,
+  error: './common/images/wyy.png',
+  loading: require('./common/images/wyy.png'),
   attempt: 1
 })
 Vue.config.productionTip = false

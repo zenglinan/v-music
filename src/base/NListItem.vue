@@ -1,0 +1,73 @@
+<template>
+  <div class="songItem">
+    <span class="id">{{index+1}}</span>
+    <main>
+      <p class="name">{{data.name}}</p>
+      <p class="desc">
+        <span>{{singer}}</span>
+        <span> - {{data.album}}</span>
+      </p>
+    </main>
+    <div class="options">
+      <n-icon href="video"></n-icon>
+      <n-icon href="more"></n-icon>
+    </div>
+  </div>
+</template>
+
+<script>
+  import NIcon from '@/base/NIcon'
+  export default {
+    name: "NListItem",
+    props: {
+      data: {
+        type: Object,
+        required: true
+      },
+      index: {
+        type: Number
+      },
+      singer: {
+        type: String
+      }
+    },
+    components: {
+      NIcon
+    }
+  }
+</script>
+
+<style scoped lang="scss">
+  @import "@/common/scss/variable.scss";
+
+  .songItem {
+    display: flex;
+    align-items: center;
+    font-size: $font-size-medium;
+    color: $color-text-l;
+    margin-bottom: 48px;
+
+    .id {
+      width: 12%;
+      text-align: center;
+    }
+    main {
+      width: 72%;
+      .name {
+        font-size: $font-size-medium-m;
+        color: $color-text;
+        padding-bottom: 30px;
+      }
+      .desc {
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .options {
+      width: 16%;
+      font-size: $font-size-large;
+    }
+  }
+
+</style>

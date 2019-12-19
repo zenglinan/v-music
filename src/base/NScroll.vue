@@ -12,7 +12,7 @@
     props: {
       probeType: {
         type: Number,
-        default: 1
+        default: 3
       },
       click: {
         type: Boolean,
@@ -22,6 +22,10 @@
         type: Array,
         required: true,
         default: null
+      },
+      bounce: {
+        type: Boolean,
+        default: true
       }
     },
     mounted() {
@@ -35,27 +39,19 @@
         this.scroll = new BScroll(this.$refs.wrapper, {
           scrollY: true,
           click: true,
-          probeType: 3
+          probeType: this.probeType,
+          bounce: this.bounce
         })
       },
       emitScrollEvent(){
-        let scrollHandler = this.throttle((e) => {
+        let scrollHandler = (e) => {
           this.$emit('scroll', e, {
             maxScrollY: this.scroll.maxScrollY,
             maxScrollX: this.scroll.maxScrollX
           })
-        })
+        }
 
         this.scroll.on('scroll', scrollHandler)
-      },
-      throttle(fn){
-        let timer = null
-        return (args) => {
-          !timer && (timer = setTimeout(() => {
-            fn.call(this, args)
-            timer = null
-          }, 300))
-        }
       },
       refresh() {
         this.scroll && this.scroll.refresh()

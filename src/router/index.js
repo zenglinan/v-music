@@ -5,18 +5,28 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    name: 'mine',
     path: '/mine',
     component: () => import('../components/Mine')
   },
   {
+    name: 'mvideo',
     path: '/mvideo',
     component: () => import('../components/MVideo')
   },
   {
+    name: 'singer',
     path: '/singer',
-    component: () => import('../components/Singer')
+    component: () => import('../components/Singer'),
+    children: [
+      {
+        path: ':id',
+        component: () => import('../components/SingerDetail')
+      }
+    ]
   },
   {
+    name: 'recommand',
     path: '/recommand',
     component: () => import('../components/Recommand')
   },

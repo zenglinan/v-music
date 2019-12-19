@@ -1,5 +1,9 @@
 <template>
   <div id="singer">
+    <transition name="slide-fade">
+      <router-view></router-view>
+    </transition>
+
     <header class="header">
       <p>全部歌手</p>
       <div class="filter">
@@ -9,9 +13,10 @@
     </header>
     <div class="list">
       <header>热门歌手</header>
-      <n-scroll :data="hotSingers" class="wrapper" @scroll="listenToScroll">
+      <n-scroll :data="hotSingers" class="wrapper" :probe-type="1" @scroll="listenToScroll">
         <ul>
-          <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem">
+          <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
+              @click="toSingerDetail(item)">
             <div class="name">
               <img v-lazy="item.img1v1Url" alt="avatar">
               <span>{{item.name}}</span>
@@ -28,6 +33,7 @@
   import {getHotSingers} from '@/api/singer'
   import NIcon from '@/base/NIcon'
   import NScroll from '@/base/NScroll'
+  import {mapMutations} from 'vuex'
 
   export default {
     name: "NewSongs",
@@ -40,9 +46,6 @@
       NIcon,
       NScroll
     },
-    beforeMount() {
-      this.$Lazyload.config({loading: require('../common/images/smile.png')});
-    },
     mounted() {
       this._getHotSingers(12)
     },
@@ -53,16 +56,34 @@
         })
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
-        if (posY < maxScrollY + 60) {
+        if (posY < maxScrollY + 200) {
           this._getHotSingers(12)
         }
-      }
+      },
+      toSingerDetail(singer) {
+        this.$router.push({
+          path: `/singer/${singer.id}`
+        })
+        this.setSinger(singer)
+      },
+      ...mapMutations({
+        'setSinger': 'SET_SIGNER'
+      })
     }
   }
 </script>
 
 <style scoped lang="scss">
   @import "@/common/scss/variable.scss";
+
+  .slide-fade-enter-active, .slide-fade-leave-active{
+    transition: all .5s;
+  }
+
+  .slide-fade-enter, .slide-fade-leave-to{
+    opacity: 0;
+    transform: translateX(100%);
+  }
 
   #singer {
     font-size: $font-size-medium-x;

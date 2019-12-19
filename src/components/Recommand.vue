@@ -1,6 +1,6 @@
 <template>
   <div id="recommand">
-    <n-scroll :data="hotSongList" class="wrapper" @scroll="listenToScroll">
+    <n-scroll :data="hotSongList" class="wrapper" :probe-type="1" @scroll="listenToScroll">
       <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
@@ -90,7 +90,7 @@
         }
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}){
-        if(posY < maxScrollY + 60){
+        if(posY < maxScrollY + 200){
           this._getHotSongList()
         }
       }
