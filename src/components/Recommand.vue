@@ -1,6 +1,6 @@
 <template>
   <div id="recommand">
-    <n-scroll :data="hotSongList" class="wrapper" :probe-type="1" @scroll="listenToScroll">
+    <n-scroll :data="hotSongList" class="wrapper" :probe-type="3" @scroll="listenToScroll">
       <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
@@ -77,7 +77,7 @@
         })
       },
       _getHotSongList() {
-        getHotSongList(21).then(res => {  // 获取指定条数的条歌单
+        getHotSongList(15).then(res => {  // 获取指定条数的条歌单
           if (!res.data.playlists.length) {
             this.listenToScroll = null
           }

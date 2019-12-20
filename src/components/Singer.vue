@@ -12,7 +12,7 @@
     </header>
     <div class="list">
       <header>热门歌手</header>
-      <n-scroll :data="hotSingers" class="wrapper" :probe-type="1" @scroll="listenToScroll">
+      <n-scroll :data="hotSingers" class="wrapper" :probe-type="3" @scroll="listenToScroll">
         <ul>
           <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
               @click="toSingerDetail(item)">
@@ -56,10 +56,10 @@
     },
     methods: {
       _getHotSingers(limit) {
-        console.log(1);
         getHotSingers(limit).then(res => {
-          if(!res.data.artists.length){
-            this.listenToScroll = ()=>{}
+          if (!res.data.artists.length) {
+            this.listenToScroll = () => {
+            }
           }
           this.allowToLoad = true
           this.loadingMore = false // 关闭加载动画

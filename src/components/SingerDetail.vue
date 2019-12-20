@@ -121,7 +121,9 @@
         })
       },
       back(e) {
-        this.$router.go(-1)
+        this.$router.push({
+          path: '/singer'
+        })
       },
       listenToScroll(pos) {
         this.scrollY = pos.y
