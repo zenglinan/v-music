@@ -6,16 +6,19 @@
         <router-view></router-view>
       </transition>
     </keep-alive>
+    <n-player></n-player>
   </div>
 </template>
 
 <script>
   import NHeader from '@/components/NHeader'
+  import NPlayer from '@/components/Player'
 
   export default {
     name: "App",
     components: {
-      NHeader
+      NHeader,
+      NPlayer
     }
   }
 </script>

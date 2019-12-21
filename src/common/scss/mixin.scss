@@ -29,3 +29,14 @@
     font-size: $font-size-large-x;
   }
 }
+
+@mixin slideUp {
+  .slideUp-enter-active, .slideUp-leave-active {
+    transition: all 1s;
+  }
+
+  .slideUp-enter, .slideUp-leave-to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}

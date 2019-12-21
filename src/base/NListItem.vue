@@ -1,5 +1,5 @@
 <template>
-  <div class="songItem">
+  <div class="songItem" @click="emitClick">
     <span class="id">{{index+1}}</span>
     <main>
       <p class="name">{{data.name}}</p>
@@ -33,6 +33,11 @@
     },
     components: {
       NIcon
+    },
+    methods: {
+      emitClick(){
+        this.$emit('click', this.data, this.index)
+      }
     }
   }
 </script>

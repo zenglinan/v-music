@@ -16,7 +16,7 @@
         </div>
         <n-list-item class="listItem" v-for="(song, idx) in songs" :key="idx"
                      :data="song" :index="idx" :singer="artist.name"
-                     :probeType="3" :bounce="false">
+                     :probeType="3" :bounce="false" @click="selectSong">
         </n-list-item>
       </div>
     </n-scroll>
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
   import {getSingerDetail} from '@/api/singer'
   import {createSong} from '@/common/js/song'
   import NIcon from '@/base/NIcon'
@@ -85,7 +85,7 @@
           this.shrinkImgHeight()
         }
         // 向下拉伸时，放大图片
-        else if (curScrollY > 0) {
+        else if (curScrollY >= 0) {
           this.enlargeImg(curScrollY)
           this.showCollectBtn()
         }
@@ -165,7 +165,16 @@
         Object.keys(styleObj).map(k => {
           el.style[k] = styleObj[k]
         })
-      }
+      },
+      selectSong(song, index) {
+        this.playSong({
+          playlist: this.songs,
+          index
+        })
+      },
+      ...mapActions([
+        'playSong'
+      ])
     }
   }
 </script>

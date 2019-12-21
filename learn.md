@@ -159,3 +159,71 @@ if (posY < maxScrollY + 20 && this.allowToLoad) {
 }
 ```
 本次加载完成后，将该标志位重新置位
+
+20. 播放器内核的 Vuex 设计
+
+21. 背景图片高斯模糊
+```html
+<div class="fullPlayer" v-show="fullScreen">
+      <div class="background">
+        <img :src="currentSong.albumPic" alt="">
+      </div>
+      <div class="background-layer"></div>
+</div>
+```
+```sass
+.fullPlayer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 200;
+    background: white;
+
+    .background {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.6;
+      filter: blur(20px);
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .background-layer {
+      opacity: 0.3;
+      filter: none;
+      background: rgb(46, 48, 48);
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+}
+```
+22. CD 旋转动画
+
+23. audio 的事件
+canplay、error、timeupdate
+
+24. 当 audio 没加载完的时候去切换上下曲，会导致 dom 发生错误，
+可以用标志位避免，当 audio 派发 canplay 的时候才置位标志位，如果标志位为false，不允许切换
+```javascript
+if(!this.songReady) return  // 避免当前audio没加载完就去切换
+```
+
+25. 获得歌曲当前播放时间和总时间
+```javascript
+利用 audio 派发的 timeupdate 事件，获取当前时间和总时间
+```
