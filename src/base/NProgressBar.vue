@@ -20,8 +20,9 @@
       }
     },
     watch: {
+      // 当传入的 percent 发生变化时，改变 content 的宽度
       percent(percent) {
-        if(percent > 0 && !this.startDrag){
+        if(percent > 0 && !this.startDrag){ // !this.startDrag 是为了防止拖拽进度条的时候，歌曲保持播放也在改变content宽度，使宽度冲突
           // content 宽度随歌曲播放而增长
           const wrapperWidth = this.$refs.wrapper.getBoundingClientRect().width
           const contentWidth = wrapperWidth * percent
@@ -31,24 +32,24 @@
     },
     methods: {
       onTouchStart(e) {
-        this.startDrag = true // 开始拖拽
+        this.startDrag = true // 开始拖拽的标志位
         // 记录起始位置、content 起始宽度
-        this.content = this.$refs.content
         this.startX = e.touches[0].pageX
-        this.originContentWidth = this.content.getBoundingClientRect().width  // 改变前的content的宽度
+        this.originContentWidth = this.$refs.content.getBoundingClientRect().width
       },
       onTouchMove(e) {
         if(!this.startDrag) return
-        this.newContentWidth =  // content 的新宽度
+        this.newContentWidth =  // content 的新宽度：>0 && <wrapper宽度
             Math.max(0,
                 Math.min(
                     this.originContentWidth + e.touches[0].pageX - this.startX,
                     this.$refs.wrapper.getBoundingClientRect().width
                 )
             )
-        this.content.style.width = `${this.newContentWidth}px`
+        this.$refs.content.style.width = `${this.newContentWidth}px`
       },
       onTouchEnd() {
+        // 对外派发事件，更改 audio 的 currentTime
         this.startDrag = false
         this.emitProcessChange(this.newContentWidth)
       },

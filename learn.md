@@ -227,3 +227,29 @@ if(!this.songReady) return  // 避免当前audio没加载完就去切换
 ```javascript
 利用 audio 派发的 timeupdate 事件，获取当前时间和总时间
 ```
+
+26. 进度条组件实现
+
+29. 圆环进度条
+```html
+<svg width="240" height="240" viewBox="0 0 200 200">
+  <circle
+    cx="100"
+    cy="100"
+    r="70"
+    stroke-width="30"
+    stroke="#E5E5E5"
+    fill="none"
+  ></circle>
+  <circle
+    cx="100"
+    cy="100"
+    r="70"
+    stroke-width="30"
+    stroke="#506DFE"
+    fill="none"
+    transform="rotate(-90, 100, 100)"
+    stroke-dasharray="220"
+  ></circle>
+</svg>
+```

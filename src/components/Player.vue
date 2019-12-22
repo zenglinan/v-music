@@ -49,7 +49,13 @@
         <p class="album">{{currentSong.album}}</p>
       </main>
       <div class="control">
-        <n-icon :href="playingIcon" class="audio" @click="togglePlaying"></n-icon>
+        <n-progress-circle class="circle" :size="86"
+                           innerBg="rgb(62,62,62)"
+                           outerBg="rgb(222, 79, 72)"
+                           :percent="percent"
+                           @click="togglePlaying"
+        ></n-progress-circle>
+        <n-icon :href="miniPlayingIcon" class="audio"></n-icon>
         <n-icon href="playlist_b" class="playlist"></n-icon>
       </div>
     </div>
@@ -62,6 +68,7 @@
   import {mapGetters, mapMutations} from 'vuex'
   import NIcon from '@/base/NIcon'
   import NProgressBar from '@/base/NProgressBar'
+  import NProgressCircle from '@/base/NProgressCircle'
 
   export default {
     name: "Player",
@@ -75,6 +82,9 @@
     computed: {
       playingIcon() {
         return this.playing ? 'playing' : 'pause'
+      },
+      miniPlayingIcon() {
+        return this.playing ? 'mini-playing' : 'mini-pause'
       },
       rotateClass() {
         return this.playing ? 'play' : 'play pause'
@@ -111,7 +121,8 @@
     },
     components: {
       NIcon,
-      NProgressBar
+      NProgressBar,
+      NProgressCircle
     },
     methods: {
       ...mapMutations({
@@ -389,7 +400,7 @@
         }
 
         .play {
-          font-size: $font-size-large-xl;
+          font-size: $font-size-large-xxl;
         }
       }
     }
@@ -442,9 +453,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: relative;
 
+      .circle {
+        position: absolute;
+        left: 0;
+      }
       .audio, .playlist {
-        font-size: $font-size-large-x;
+        font-size: $font-size-large-xl;
       }
     }
   }
