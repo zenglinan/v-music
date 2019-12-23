@@ -51,9 +51,11 @@
       onTouchEnd() {
         // 对外派发事件，更改 audio 的 currentTime
         this.startDrag = false
-        this.emitProcessChange(this.newContentWidth)
+        const newContentWidth = this.newContentWidth || this.originContentWidth
+        this.emitProcessChange(newContentWidth)
       },
       onProcessClick(e) {
+        if(e.target.className === 'pointer') return
         const newWidth = Math.max(0, e.offsetX)
         this.emitProcessChange(newWidth)
       },

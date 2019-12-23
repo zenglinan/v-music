@@ -20,22 +20,25 @@
     ></circle>
   </svg>
 </template>
-
 <script>
+  const r = 92
+
   export default {
     name: "NProgressCircle",
     data(){
       return {
-        r: 92
+        r: 92,
+        round: 2 * Math.PI * r
       }
     },
     computed: {
       dasharray(){
         if(!this.percent) {
-          this.percent = 0
+          return `0 ${this.round}`
+        } else {
+          return `${this.percent * this.round} ${this.round}`
         }
-        const round = 2 * Math.PI * this.r  // 周长
-        return `${this.percent * round} ${round}`
+
       }
     },
     props: {

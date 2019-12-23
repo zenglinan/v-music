@@ -96,7 +96,6 @@
         return this.playing ? 'play' : 'pause'
       },
       percent() {
-        console.log(this.currentTime, this.duration);
         return this.currentTime / this.duration
       },
       ...mapGetters([
