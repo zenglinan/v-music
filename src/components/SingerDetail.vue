@@ -71,7 +71,7 @@
     },
     computed: {
       ...mapGetters([
-        'singer'
+        'singer',
       ]),
       bgStyle() {
         return `background-image:url(${this.avatarUrl})`
@@ -168,7 +168,7 @@
       },
       selectSong(song, index) {
         this.playSong({
-          playlist: this.songs,
+          playlist: this.songs.slice(),
           index
         })
       },

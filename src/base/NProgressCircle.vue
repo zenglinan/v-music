@@ -3,7 +3,7 @@
     <circle
             cx="100"
             cy="100"
-            r="92"
+            :r="r"
             stroke-width="8"
             :stroke="innerBg"
             fill="none"
@@ -11,12 +11,12 @@
     <circle
             cx="100"
             cy="100"
-            r="92"
+            :r="r"
             stroke-width="8"
             :stroke="outerBg"
             fill="none"
             transform="rotate(-90, 100, 100)"
-            :stroke-dasharray='`${percent*578} 578`'
+            :stroke-dasharray='dasharray'
     ></circle>
   </svg>
 </template>
@@ -24,6 +24,20 @@
 <script>
   export default {
     name: "NProgressCircle",
+    data(){
+      return {
+        r: 92
+      }
+    },
+    computed: {
+      dasharray(){
+        if(!this.percent) {
+          this.percent = 0
+        }
+        const round = 2 * Math.PI * this.r  // 周长
+        return `${this.percent * round} ${round}`
+      }
+    },
     props: {
       size: {
         type: String | Number,
@@ -36,7 +50,7 @@
         type: String
       },
       percent: {
-        type: String | Number
+        type: String | Number,
       }
     },
     methods: {

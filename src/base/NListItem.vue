@@ -17,6 +17,8 @@
 
 <script>
   import NIcon from '@/base/NIcon'
+  import {mapGetters} from 'vuex'
+
   export default {
     name: "NListItem",
     props: {
@@ -34,8 +36,18 @@
     components: {
       NIcon
     },
+    computed: {
+      ...mapGetters([
+        'playing'
+      ])
+    },
     methods: {
       emitClick(){
+        if(this.playing) {
+          alert('歌曲加载中。。。')
+          return
+        }
+
         this.$emit('click', this.data, this.index)
       }
     }

@@ -59,7 +59,8 @@
         <n-icon href="playlist_b" class="playlist"></n-icon>
       </div>
     </div>
-    <audio ref="audio" @canplay="audioReady" @error="audioError" @timeupdate="timeUpdate"
+    <audio ref="audio" @canplay="audioReady" @ended="songEnd"
+           @error="audioError" @timeupdate="timeUpdate"
            :src="`https://music.163.com/song/media/outer/url?id=${currentSong.id}.mp3`"></audio>
   </div>
 </template>
@@ -95,6 +96,7 @@
         return this.playing ? 'play' : 'pause'
       },
       percent() {
+        console.log(this.currentTime, this.duration);
         return this.currentTime / this.duration
       },
       ...mapGetters([
@@ -164,7 +166,7 @@
         }
       },
       nextSong() {
-        if (!this.songReady) return  // 避免当前audio没加载完就去切换
+        if (!this.songReady || !this.playing) return  // 避免当前audio没加载完就去切换
 
         const songListLen = this.playlist.length
         const index = (this.currentIndex + 1) % songListLen
@@ -173,6 +175,23 @@
 
         if (!this.playing) {
           this.togglePlaying()
+        }
+      },
+      songEnd() {
+
+        if(this.mode === 'loop'){
+          this.loopSong()
+        } else {
+          this.nextSong()
+        }
+      },
+      loopSong() {
+        const audio = this.$refs.audio
+        audio.currentTime = 0
+        if(!this.playing){  // 如果当前是暂停状态，不做处理
+          return
+        } else {
+          audio.play()
         }
       },
       togglePlaying() {

@@ -256,3 +256,17 @@ if(!this.songReady) return  // 避免当前audio没加载完就去切换
 30. 打乱数组：shuffle
 
 31. 歌曲播放模式切换注意点：更改 currentIndex 为当前歌曲在新队列中的索引
+
+32. 播放完成后，通过 audio 派发的ended事件手动进行切换
+
+33. 修复bugs：
+(1) svg 初始显示错误
+原因：
+初始 percent 为 currentTime / duration(0/xxx)，为NaN
+
+(2) 修复随机模式下，点击歌手详情页的歌曲，播放出现错乱的bug
+原因：
+点击歌手详情的歌曲进行播放时，传过去的songs列表没有进行一次深拷贝，
+直接传了引用过去，导致随机模式下vuex 中的歌曲列表被修改，
+歌手详情中的 this.songs 也被修改了。
+
