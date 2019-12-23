@@ -43,11 +43,6 @@
     },
     methods: {
       emitClick(){
-        if(this.playing) {
-          alert('歌曲加载中。。。')
-          return
-        }
-
         this.$emit('click', this.data, this.index)
       }
     }

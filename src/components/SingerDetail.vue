@@ -10,8 +10,8 @@
     <div class="layer" ref="layer"></div>
     <n-scroll :data="songs" class="scrollWrapper" ref="list" @scroll="listenToScroll">
       <div class="list">
-        <div class="playAll" v-show="songs.length !== 0">
-          <n-icon href="audio" class="icon"></n-icon>
+        <div class="playAll" v-show="songs.length !== 0" @click="playHotSongs">
+          <n-icon href="pause_b" class="icon"></n-icon>
           <span>播放热门歌曲</span>
         </div>
         <n-list-item class="listItem" v-for="(song, idx) in songs" :key="idx"
@@ -170,6 +170,12 @@
         this.playSong({
           playlist: this.songs.slice(),
           index
+        })
+      },
+      playHotSongs() {
+        this.playSong({
+          playlist: this.songs.slice(),
+          index: 0
         })
       },
       ...mapActions([

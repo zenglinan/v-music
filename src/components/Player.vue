@@ -114,6 +114,7 @@
         if (!curSong.id) return
         this.$nextTick(() => {
           this.$refs.audio.play()
+              .catch(r => console.log(r)) // 这里要捕获一下错误，防止快速切换歌曲时，audio还没开始play的时候被打断
         })
       },
       playing(playingState) {
@@ -153,8 +154,6 @@
         this._setFullScreen(false)
       },
       lastSong() {
-        if (!this.songReady) return
-
         const songListLen = this.playlist.length
         const index = (this.currentIndex + songListLen - 1) % songListLen
         this._setCurrentSongIndex(index)
@@ -165,8 +164,6 @@
         }
       },
       nextSong() {
-        if (!this.songReady || !this.playing) return  // 避免当前audio没加载完就去切换
-
         const songListLen = this.playlist.length
         const index = (this.currentIndex + 1) % songListLen
         this._setCurrentSongIndex(index)
