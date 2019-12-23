@@ -1,4 +1,3 @@
-
 const state = {
   singer: {},
   playing: false, // 当前是否播放

@@ -30,7 +30,7 @@
             <span class="end">{{format(duration)}}</span>
           </div>
           <div class="controlBtn">
-            <n-icon :href="mode"></n-icon>
+            <n-icon :href="mode" @click="changeMode"></n-icon>
             <n-icon href="lastsong" @click="lastSong"></n-icon>
             <n-icon :href="playingIcon" class="play" @click="togglePlaying"></n-icon>
             <n-icon href="nextsong" @click="nextSong"></n-icon>
@@ -69,6 +69,8 @@
   import NIcon from '@/base/NIcon'
   import NProgressBar from '@/base/NProgressBar'
   import NProgressCircle from '@/base/NProgressCircle'
+  import mode from '@/common/js/mode'
+  import shuffle from '@/common/js/utils/shuffle'
 
   export default {
     name: "Player",
@@ -102,7 +104,8 @@
         'mode',
         'singer',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'sequenceList'
       ])
     },
     watch: {
@@ -128,7 +131,9 @@
       ...mapMutations({
         _setFullScreen: 'SET_FULL_SCREEN',
         _setPlayingState: 'SET_PLAYING_STATE',
-        _setCurrentSongIndex: 'SET_CURRENT_INDEX'
+        _setCurrentSongIndex: 'SET_CURRENT_INDEX',
+        _setMode: 'SET_PLAY_MODE',
+        _setPlayList: 'SET_PLAYLIST'
       }),
       format(time) {
         let m = Math.round(time / 60)
@@ -186,6 +191,27 @@
       },
       onProcessChange(percent) {
         this.$refs.audio.currentTime = this.duration * percent
+      },
+      changeMode() {
+        let curModeIndex = mode.indexOf(this.mode)
+        let tarModeIndex = (++curModeIndex) % 3
+        this._setMode(mode[tarModeIndex]) // 更改 mode
+        // 改变 list
+        let curList
+        if(mode[tarModeIndex] === 'random'){
+          curList = shuffle(this.playlist)
+        } else {
+          curList = this.sequenceList
+        }
+        this._setPlayList(curList)
+        // 切换播放模式后，更改 currentIndex 为当前歌曲在新队列中的索引
+        this.changeCurrentIndex(curList)
+      },
+      changeCurrentIndex(list) {
+        const tarId = list.findIndex(item => {
+          return this.currentSong.id === item.id
+        })
+        this._setCurrentSongIndex(tarId)
       }
     }
   }

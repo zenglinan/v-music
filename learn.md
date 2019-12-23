@@ -253,3 +253,6 @@ if(!this.songReady) return  // 避免当前audio没加载完就去切换
   ></circle>
 </svg>
 ```
+30. 打乱数组：shuffle
+
+31. 歌曲播放模式切换注意点：更改 currentIndex 为当前歌曲在新队列中的索引
