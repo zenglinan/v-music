@@ -1,5 +1,5 @@
 <template>
-  <div class="player" v-if="playlist.length" ref="player">
+  <div class="player" v-show="playlist.length" ref="player">
     <transition name="normal">
       <div class="fullPlayer" v-show="fullScreen">
         <div class="background">
@@ -15,14 +15,28 @@
             <p class="singerName">{{singer.name}}</p>
           </div>
         </header>
-        <div class="needle">
-          <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
-        </div>
-        <main>
-          <div class="wrapper">
+        <main class="left" :style="{visibility: currentShow==='lyric' ? 'hidden' : 'visible'}">
+          <div class="needle">
+            <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
+          </div>
+          <div class="wrapper" @click="toLyric">
             <img :src="currentSong.albumPic" alt="" :class="rotateClass" class="rotate">
           </div>
         </main>
+
+        <n-scroll class="right" :probe-type="3" ref="lyricScroll"
+                  :data="lyricData" v-if="currentLyric"
+                  :style="{visibility: currentShow==='lyric' ? 'visible' : 'hidden'}">
+          <div class="lyricWrapper">
+            <p class="line" ref="line"
+               v-for="(line, index) in currentLyric.lines"
+               :class="{active: activeLine === index}"
+            >
+              {{line.txt}}
+            </p>
+          </div>
+        </n-scroll>
+
         <footer class="control">
           <div class="timeBar">
             <span class="now">{{format(currentTime)}}</span>
@@ -72,6 +86,9 @@
   import NProgressCircle from '@/base/NProgressCircle'
   import mode from '@/common/js/mode'
   import shuffle from '@/common/js/utils/shuffle'
+  import {getLyric} from '@/api/lyric'
+  import Lyric from 'lyric-parser'
+  import NScroll from '@/base/NScroll'
 
   export default {
     name: "Player",
@@ -79,7 +96,10 @@
       return {
         songReady: false,
         currentTime: 0,  // 歌曲当前播放时间
-        duration: 0 // 歌曲总时长
+        duration: 0, // 歌曲总时长
+        currentLyric: null,
+        activeLine: 0, // 当前高亮的歌词行数
+        currentShow: 'cd'
       }
     },
     computed: {
@@ -98,6 +118,10 @@
       percent() {
         return this.currentTime / this.duration
       },
+      lyricData() {
+        console.log('lyric update', this.currentLyric);
+        return this.currentLyric && this.currentLyric.lines
+      },
       ...mapGetters([
         'fullScreen',
         'playlist',
@@ -112,6 +136,10 @@
     watch: {
       currentSong(curSong) {
         if (!curSong.id) return
+        if (this.currentLyric) {
+          this.currentLyric.stop()  // 切歌的时候清除原来的定时器
+        }
+        this._getLyric(this.currentSong.id)
         this.$nextTick(() => {
           this.$refs.audio.play()
               .catch(r => console.log(r)) // 这里要捕获一下错误，防止快速切换歌曲时，audio还没开始play的时候被打断
@@ -127,7 +155,8 @@
     components: {
       NIcon,
       NProgressBar,
-      NProgressCircle
+      NProgressCircle,
+      NScroll
     },
     methods: {
       ...mapMutations({
@@ -153,6 +182,29 @@
       back() {
         this._setFullScreen(false)
       },
+      _getLyric() {
+        getLyric(this.currentSong.id).then(res => {
+          if (res.data.nolyric) return // 无歌词的歌曲
+
+          const lyric = res.data.lrc.lyric
+          this.currentLyric = new Lyric(lyric, ({lineNum, text}) => {
+            this.activeLine = lineNum
+            if (lineNum > 5) {
+              let lineEl = this.$refs.line[lineNum - 5]
+              this.$refs.lyricScroll.scroll.scrollToElement(lineEl, 1000)
+            } else {
+              this.$refs.lyricScroll.scroll && this.$refs.lyricScroll.scroll.scrollTo(0, 0, 1000)
+            }
+          })
+          if (this.playing) { // 如果当前在播放歌曲，触发 play 方法
+            this.currentLyric.play()
+          }
+        })
+      },
+      toLyric() {
+        this.currentShow = 'lyric'
+        this.$refs.lyricScroll.refresh()
+      },
       lastSong() {
         const songListLen = this.playlist.length
         const index = (this.currentIndex + songListLen - 1) % songListLen
@@ -174,8 +226,7 @@
         }
       },
       songEnd() {
-
-        if(this.mode === 'loop'){
+        if (this.mode === 'loop') {
           this.loopSong()
         } else {
           this.nextSong()
@@ -184,13 +235,19 @@
       loopSong() {
         const audio = this.$refs.audio
         audio.currentTime = 0
-        if(!this.playing){  // 如果当前是暂停状态，不做处理
+        if (this.currentLyric) {
+          this.currentLyric.seek(0)  // 单曲循环下，播放完成后将歌词回退到开头
+        }
+        if (!this.playing) {  // 如果当前是暂停状态，不做处理
           return
         } else {
           audio.play()
         }
       },
       togglePlaying() {
+        if (this.currentLyric) {
+          this.currentLyric.togglePlay()  // toggle 歌曲的时候，歌词也跟随 toggle
+        }
         this._setPlayingState(!this.playing)
       },
       audioReady(e) {
@@ -205,7 +262,11 @@
         this.currentTime = e.target.currentTime
       },
       onProcessChange(percent) {
-        this.$refs.audio.currentTime = this.duration * percent
+        const curTime = this.duration * percent
+        this.$refs.audio.currentTime = curTime
+        if (this.currentLyric) {
+          this.currentLyric.seek(curTime * 1000)  // 拖动进度条的时候，将歌词seek到相应时间
+        }
       },
       changeMode() {
         let curModeIndex = mode.indexOf(this.mode)
@@ -213,7 +274,7 @@
         this._setMode(mode[tarModeIndex]) // 更改 mode
         // 改变 list
         let curList
-        if(mode[tarModeIndex] === 'random'){
+        if (mode[tarModeIndex] === 'random') {
           curList = shuffle(this.playlist)
         } else {
           curList = this.sequenceList
@@ -319,8 +380,8 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 8vh;
-      padding: 40px 60px 0 60px;
+      height: 12vh;
+      padding: 0 60px 0 60px;
       display: flex;
       align-items: center;
       font-size: $font-size-large;
@@ -376,7 +437,7 @@
       }
     }
 
-    main {
+    main.left {
       .wrapper {
         box-sizing: border-box;
         position: absolute;
@@ -395,11 +456,38 @@
       }
     }
 
+    .right {
+      position: absolute;
+      top: 14vh;
+      overflow: hidden;
+      bottom: 14vh;
+      width: 100%;
+
+      .lyricWrapper {
+        p {
+          font-size: $font-size-medium-m;
+          color: $color-text-dw;
+          height: 7.2vh;
+          text-align: center;
+          transition: all .5s;
+          width: 80%;
+          margin: 0 auto;
+          line-height: 1.4;
+
+          &.active {
+            color: $color-text-w;
+            font-size: $font-size-medium-x;
+          }
+        }
+      }
+    }
+
     footer {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
+      height: 14vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -425,7 +513,7 @@
       }
 
       .controlBtn {
-        padding: 65px 0;
+        padding-bottom: 65px;
         font-size: $font-size-large-x;
         display: flex;
         align-items: center;
@@ -500,6 +588,7 @@
         position: absolute;
         left: 0;
       }
+
       .audio, .playlist {
         font-size: $font-size-large-xl;
       }

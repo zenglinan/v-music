@@ -31,7 +31,6 @@
     mounted() {
       setTimeout(() => {
         this.initScroll()
-        this.emitScrollEvent()
       }, 60)
     },
     methods: {
@@ -42,8 +41,9 @@
           probeType: this.probeType,
           bounce: this.bounce
         })
+        this.emitScrollEvent()
       },
-      emitScrollEvent(){
+      emitScrollEvent() {
         let scrollHandler = (e) => {
           this.$emit('scroll', e, {
             maxScrollY: this.scroll.maxScrollY,
@@ -59,10 +59,10 @@
     },
     watch: {
       data() {
-        !this.timer && (this.timer = setTimeout(() => {
+        setTimeout(() => {
+          console.log('data', this.data);
           this.refresh()
-          this.timer = null
-        }, 60))
+        }, 60)
       }
     }
   }

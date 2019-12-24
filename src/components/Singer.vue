@@ -115,12 +115,12 @@
 
     .list {
       header {
-        font-size: $font-size-medium;
-        background-color: $color-background-d;
-        color: $color-text-l;
-        margin: 0 -45px;
-        padding: 28px 45px;
-      }
+         font-size: $font-size-medium;
+         background-color: $color-background-d;
+         color: $color-text-l;
+         margin: 0 -45px;
+         padding: 28px 45px;
+       }
 
       .wrapper {
         height: 80vh;
