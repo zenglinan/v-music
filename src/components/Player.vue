@@ -15,27 +15,31 @@
             <p class="singerName">{{singer.name}}</p>
           </div>
         </header>
-        <main class="left" :style="{visibility: currentShow==='lyric' ? 'hidden' : 'visible'}">
-          <div class="needle">
-            <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
-          </div>
-          <div class="wrapper" @click="toLyric">
-            <img :src="currentSong.albumPic" alt="" :class="rotateClass" class="rotate">
-          </div>
-        </main>
 
-        <n-scroll class="right" :probe-type="3" ref="lyricScroll"
-                  :data="lyricData" v-if="currentLyric"
-                  :style="{visibility: currentShow==='lyric' ? 'visible' : 'hidden'}">
-          <div class="lyricWrapper">
-            <p class="line" ref="line"
-               v-for="(line, index) in currentLyric.lines"
-               :class="{active: activeLine === index}"
-            >
-              {{line.txt}}
-            </p>
-          </div>
-        </n-scroll>
+        <transition name="fade">
+          <main class="left" v-show="currentShow === 'cd'">
+            <div class="needle">
+              <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
+            </div>
+            <div class="wrapper" @click="showLyric">
+              <img :src="currentSong.albumPic" alt="" :class="rotateClass" class="rotate">
+            </div>
+          </main>
+        </transition>
+        <transition name="fade">
+          <n-scroll class="right" :probe-type="3" ref="lyricScroll"
+                    :data="lyricData" v-if="currentLyric"
+                    v-show="currentShow === 'lyric'">
+            <div class="lyricWrapper" @click="showCD">
+              <p class="line" ref="line"
+                 v-for="(line, index) in currentLyric.lines"
+                 :class="{active: activeLine === index}"
+              >
+                {{line.txt}}
+              </p>
+            </div>
+          </n-scroll>
+        </transition>
 
         <footer class="control">
           <div class="timeBar">
@@ -97,9 +101,10 @@
         songReady: false,
         currentTime: 0,  // 歌曲当前播放时间
         duration: 0, // 歌曲总时长
-        currentLyric: null,
+        currentLyric: null, // 当前歌曲的歌词
         activeLine: 0, // 当前高亮的歌词行数
-        currentShow: 'cd'
+        currentShow: 'cd',
+        playingLyric: ''  // 当前播放到的歌词
       }
     },
     computed: {
@@ -119,7 +124,6 @@
         return this.currentTime / this.duration
       },
       lyricData() {
-        console.log('lyric update', this.currentLyric);
         return this.currentLyric && this.currentLyric.lines
       },
       ...mapGetters([
@@ -181,35 +185,50 @@
       },
       back() {
         this._setFullScreen(false)
+        this.showCD()
       },
       _getLyric() {
         getLyric(this.currentSong.id).then(res => {
-          if (res.data.nolyric) return // 无歌词的歌曲
-
           const lyric = res.data.lrc.lyric
-          this.currentLyric = new Lyric(lyric, ({lineNum, text}) => {
-            this.activeLine = lineNum
-            if (lineNum > 5) {
-              let lineEl = this.$refs.line[lineNum - 5]
-              this.$refs.lyricScroll.scroll.scrollToElement(lineEl, 1000)
-            } else {
-              this.$refs.lyricScroll.scroll && this.$refs.lyricScroll.scroll.scrollTo(0, 0, 1000)
-            }
-          })
+          this.currentLyric = new Lyric(lyric, this.lyricHandler)
           if (this.playing) { // 如果当前在播放歌曲，触发 play 方法
             this.currentLyric.play()
           }
+        }).catch(e => {
+          this.currentLyric = new Lyric("[00:00.000] 该歌曲无歌词")
+          this.activeLine = 0
         })
       },
-      toLyric() {
+      lyricHandler({lineNum}) {
+        this.activeLine = lineNum // 获取当前歌词所在行数
+        if (lineNum > 5) {
+          let lineEl = this.$refs.line[lineNum - 5]
+          this.$refs.lyricScroll.scroll.scrollToElement(lineEl, 1000)
+        } else {
+          this.$refs.lyricScroll &&
+          this.$refs.lyricScroll.scroll &&
+          this.$refs.lyricScroll.scroll.scrollTo(0, 0, 1000)
+        }
+      },
+      showLyric() { // 切换为显示歌词
         this.currentShow = 'lyric'
-        this.$refs.lyricScroll.refresh()
+        this.$nextTick(() => {
+          this.$refs.lyricScroll.refresh()
+        })
+      },
+      showCD() { // 切换为显示 CD 唱片
+        this.currentShow = 'cd'
       },
       lastSong() {
         const songListLen = this.playlist.length
+        if (songListLen === 1) {
+          this.loopSong()
+          return
+        }
         const index = (this.currentIndex + songListLen - 1) % songListLen
         this._setCurrentSongIndex(index)
         this.songReady = false
+        this.showCD()
 
         if (!this.playing) {
           this.togglePlaying()
@@ -217,9 +236,14 @@
       },
       nextSong() {
         const songListLen = this.playlist.length
+        if (songListLen === 1) {
+          this.loopSong()
+          return
+        }
         const index = (this.currentIndex + 1) % songListLen
         this._setCurrentSongIndex(index)
         this.songReady = false
+        this.showCD()
 
         if (!this.playing) {
           this.togglePlaying()
@@ -295,6 +319,9 @@
 
 <style scoped lang="scss">
   @import "@/common/scss/variable";
+  @import "@/common/scss/mixin";
+
+  @include fade;
   /* 全屏播放界面动画 */
   .normal-enter-active, .normal-leave-active {
     transition: all 0.4s;
