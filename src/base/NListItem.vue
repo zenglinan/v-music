@@ -74,6 +74,7 @@
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+        padding-bottom: 15px;
       }
     }
     .options {

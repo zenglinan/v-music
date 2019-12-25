@@ -4,15 +4,17 @@
       <router-view></router-view>
     </transition>
     <header class="header">
-      <p>全部歌手</p>
-      <div class="filter">
-        <n-icon href="filter"></n-icon>
-        <span>筛选</span>
+      <div class="top">
+        <p>全部歌手</p>
+        <div class="filter">
+          <n-icon href="filter"></n-icon>
+          <span>筛选</span>
+        </div>
       </div>
+      <p class="bottom">热门歌手</p>
     </header>
     <div class="list">
-      <header>热门歌手</header>
-      <n-scroll :data="hotSingers" class="wrapper" :probe-type="3" @scroll="listenToScroll">
+      <n-scroll ref="singerlist" :data="hotSingers" class="wrapper" :probe-type="3" @scroll="listenToScroll">
         <ul>
           <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
               @click="toSingerDetail(item)">
@@ -36,9 +38,11 @@
   import NScroll from '@/base/NScroll'
   import NLoading from '@/base/NLoading'
   import {mapMutations} from 'vuex'
+  import {playlistMixin} from "@/common/js/mixin";
 
   export default {
     name: "NewSongs",
+    mixins: [playlistMixin],
     data() {
       return {
         hotSingers: [],
@@ -55,6 +59,11 @@
       this._getHotSingers(12)
     },
     methods: {
+      adjustPlaylist(playlist) {
+        const bottom = playlist.length ? '180px' : ''
+        this.$refs.singerlist.$el.style.bottom = bottom
+        this.$refs.singerlist.refresh()
+      },
       _getHotSingers(limit) {
         getHotSingers(limit).then(res => {
           if (!res.data.artists.length) {
@@ -97,33 +106,48 @@
     font-size: $font-size-medium-x;
 
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       font-weight: normal;
       margin-bottom: 28px;
+      height: 10vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
 
-      .filter {
-        font-size: $font-size-medium;
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-        span {
-          margin-left: 20px;
+        .filter {
+          font-size: $font-size-medium;
+
+          span {
+            margin-left: 20px;
+          }
         }
+      }
+
+      p.bottom {
+        font-size: $font-size-medium;
+        background-color: $color-background-d;
+        color: $color-text-l;
+        margin: 0 -45px;
+        padding: 28px 45px;
       }
     }
 
 
     .list {
-      header {
-         font-size: $font-size-medium;
-         background-color: $color-background-d;
-         color: $color-text-l;
-         margin: 0 -45px;
-         padding: 28px 45px;
-       }
+      display: flex;
+      justify-content: center;
 
       .wrapper {
-        height: 80vh;
+        position: fixed;
+        bottom: 0;
+        top: 20vh;
+        width: 100%;
+        padding: 0 45px;
+        box-sizing: border-box;
         overflow: hidden;
 
         ul {

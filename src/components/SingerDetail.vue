@@ -32,6 +32,7 @@
   import NListItem from '@/base/NListItem'
   import NLoading from '@/base/NLoading'
   import NScroll from '@/base/NScroll'
+  import {playlistMixin} from "@/common/js/mixin";
 
   let minScrollY // layer 层最高的 top 值
   const SPACE = 200 // 上滑阈值处和顶部的空隙值
@@ -45,6 +46,7 @@
 
   export default {
     name: "SingerDetail",
+    mixins: [playlistMixin],
     data() {
       return {
         songs: [],
@@ -107,7 +109,6 @@
           this.$router.push('/singer')
           return
         }
-
         getSingerDetail(id).then(res => {
           res.data.hotSongs.forEach(data => {
             const artist = res.data.artist
@@ -119,6 +120,11 @@
             this.avatarUrl = this.artist.imgUrl
           })
         })
+      },
+      adjustPlaylist(playlist) {
+        const bottom = playlist.length ? '180px' : ''
+        this.$refs.list.$el.style.bottom = bottom
+        this.$refs.list.refresh()
       },
       back(e) {
         this.$router.push({

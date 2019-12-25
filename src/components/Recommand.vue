@@ -1,6 +1,6 @@
 <template>
   <div id="recommand">
-    <n-scroll :data="hotSongList" class="wrapper" :probe-type="3" @scroll="listenToScroll">
+    <n-scroll :data="hotSongList" class="wrapper" ref="songlist" :probe-type="3" @scroll="listenToScroll">
       <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
@@ -37,9 +37,11 @@
   import {swiper, swiperSlide} from 'vue-awesome-swiper'
   import NScroll from '@/base/NScroll'
   import NLoading from '@/base/NLoading'
+  import {playlistMixin} from "@/common/js/mixin";
 
   export default {
     name: "Recommand",
+    mixins: [playlistMixin],
     data() {
       return {
         banners: {},
@@ -71,6 +73,11 @@
       this.listenToScroll()
     },
     methods: {
+      adjustPlaylist(playlist) {
+        const bottom = playlist.length ? '180px' : ''
+        this.$refs.songlist.$el.style.bottom = bottom
+        this.$refs.songlist.refresh()
+      },
       _getBanners() {
         getBanners(1).then(res => { // params: Android: 1
           this.banners = res.data.banners
@@ -123,8 +130,15 @@
   @include loading;
 
   #recommand {
+    display: flex;
+    justify-content: center;
     .wrapper {
-      height: 90vh;
+      position: fixed;
+      top: 10vh;
+      bottom: 0;
+      width: 100%;
+      padding: 0 45px;
+      box-sizing: border-box;
       overflow: hidden;
 
       div.content {
