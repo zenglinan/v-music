@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <n-header></n-header>
-    <keep-alive>
-      <transition name="fade">
+    <transition name="fade">
+      <keep-alive>
         <router-view></router-view>
-      </transition>
-    </keep-alive>
+      </keep-alive>
+    </transition>
     <n-player></n-player>
   </div>
 </template>

@@ -1,8 +1,5 @@
 <template>
   <div id="singer">
-    <transition name="slide-fade">
-      <router-view></router-view>
-    </transition>
     <header class="header">
       <div class="top">
         <p>全部歌手</p>
@@ -29,6 +26,9 @@
       </n-scroll>
     </div>
     <n-loading v-show="!hotSingers.length" class="loading"></n-loading>
+    <transition name="slide-fade">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 

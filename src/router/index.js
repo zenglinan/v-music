@@ -21,7 +21,7 @@ const routes = [
     children: [
       {
         path: ':id',
-        component: () => import('../components/SingerDetail')
+        component: () => import('../components/musicList')
       }
     ]
   },
