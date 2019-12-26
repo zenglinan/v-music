@@ -14,7 +14,6 @@ export const playlistMixin = {
   },
   watch: {
     playlist() {
-      console.log(1);
       this.adjustPlaylist(this.playlist)
     }
   },

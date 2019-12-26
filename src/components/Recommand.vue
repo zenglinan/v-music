@@ -1,6 +1,6 @@
 <template>
   <div id="recommand">
-    <n-scroll :data="hotSongList" class="wrapper" ref="songlist" :probe-type="3" @scroll="listenToScroll">
+    <n-scroll :data="hotSongList" class="recommandWrapper" ref="songlist" :probe-type="3" @scroll="listenToScroll">
       <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
@@ -18,7 +18,7 @@
             <div class="square">歌单广场</div>
           </header>
           <ul class="list">
-            <li class="listItem" v-for="(item, idx) in hotSongList" :key="idx">
+            <li class="listItem" v-for="(item, idx) in hotSongList" :key="idx" @click="toSonglistDetail(item.id)">
               <img v-lazy="item.coverImgUrl" alt="image">
               <p>{{item.name}}</p>
             </li>
@@ -28,6 +28,9 @@
       </div>
     </n-scroll>
     <n-loading v-show="!hotSongList.length" class="loading"></n-loading>
+    <transition name="slide-fade">
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -77,6 +80,9 @@
         const bottom = playlist.length ? '180px' : ''
         this.$refs.songlist.$el.style.bottom = bottom
         this.$refs.songlist.refresh()
+      },
+      toSonglistDetail(id){
+        this.$router.push(`/recommand/${id}`)
       },
       _getBanners() {
         getBanners(1).then(res => { // params: Android: 1
@@ -128,11 +134,12 @@
   @import "@/common/scss/mixin.scss";
 
   @include loading;
+  @include slide;
 
   #recommand {
     display: flex;
     justify-content: center;
-    .wrapper {
+    .recommandWrapper {
       position: fixed;
       top: 10vh;
       bottom: 0;

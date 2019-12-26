@@ -21,14 +21,20 @@ const routes = [
     children: [
       {
         path: ':id',
-        component: () => import('../components/musicList')
+        component: () => import('../components/SingerDetail')
       }
     ]
   },
   {
     name: 'recommand',
     path: '/recommand',
-    component: () => import('../components/Recommand')
+    component: () => import('../components/Recommand'),
+    children: [
+      {
+        path: ':id',
+        component: () => import('../components/SonglistDetail')
+      }
+    ]
   },
   {
     path: "*",

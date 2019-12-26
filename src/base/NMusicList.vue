@@ -15,7 +15,7 @@
           <span>播放热门歌曲</span>
         </div>
         <n-list-item class="listItem" v-for="(song, idx) in songs" :key="idx"
-                     :data="song" :index="idx" :singer="artist.name"
+                     :data="song" :index="idx"
                      :probeType="3" :bounce="false" @click="selectSong">
         </n-list-item>
       </div>
@@ -25,9 +25,7 @@
 </template>
 
 <script>
-  import {mapGetters, mapActions} from 'vuex'
-  import {getSingerDetail} from '@/api/singer'
-  import {createSong} from '@/common/js/song'
+  import {mapActions} from 'vuex'
   import NIcon from '@/base/NIcon'
   import NListItem from '@/base/NListItem'
   import NLoading from '@/base/NLoading'
@@ -42,17 +40,21 @@
     high: 30,
     max: 100
   }
-  const avatarLoadingUrl = require(`../common/images/avatar-loading.jpg`)
 
   export default {
-    name: "SingerDetail",
+    name: "NMusicList",
     mixins: [playlistMixin],
+    props: {
+      songs: {
+        type: Array
+      },
+      avatarUrl: {
+        type: String
+      }
+    },
     data() {
       return {
-        songs: [],
-        artist: {},
         scrollY: 0,
-        avatarUrl: avatarLoadingUrl
       }
     },
     components: {
@@ -60,9 +62,6 @@
       NListItem,
       NLoading,
       NScroll
-    },
-    created() {
-      this._getSingerDetail()
     },
     mounted() {
       this.bgImgHeight = this.$refs.bgImg.clientHeight
@@ -72,9 +71,6 @@
       })
     },
     computed: {
-      ...mapGetters([
-        'singer',
-      ]),
       bgStyle() {
         return `background-image:url(${this.avatarUrl})`
       }
@@ -103,33 +99,13 @@
       }
     },
     methods: {
-      _getSingerDetail() {
-        const id = this.singer.id
-        if (!id) { // 如果没有 id ，且进入了歌手详情页面，进行回退
-          this.$router.push('/singer')
-          return
-        }
-        getSingerDetail(id).then(res => {
-          res.data.hotSongs.forEach(data => {
-            const artist = res.data.artist
-            this.artist = {
-              imgUrl: artist.img1v1Url,
-              name: artist.name
-            }
-            this.songs.push(createSong(data))
-            this.avatarUrl = this.artist.imgUrl
-          })
-        })
-      },
       adjustPlaylist(playlist) {
         const bottom = playlist.length ? '180px' : ''
         this.$refs.list.$el.style.bottom = bottom
         this.$refs.list.refresh()
       },
-      back(e) {
-        this.$router.push({
-          path: '/singer'
-        })
+      back() {
+        this.$router.go(-1)
       },
       listenToScroll(pos) {
         this.scrollY = pos.y
@@ -173,6 +149,7 @@
         })
       },
       selectSong(song, index) {
+        this.clearSong()
         this.playSong({
           playlist: this.songs.slice(),
           index
@@ -185,7 +162,8 @@
         })
       },
       ...mapActions([
-        'playSong'
+        'playSong',
+        'clearSong'
       ])
     }
   }

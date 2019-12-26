@@ -12,7 +12,7 @@
           </div>
           <div class="desc">
             <div class="songName">{{currentSong.name}}</div>
-            <p class="singerName">{{singer.name}}</p>
+            <p class="singerName">{{singer}}</p>
           </div>
         </header>
 
@@ -152,7 +152,9 @@
       playing(playingState) {
         this.$nextTick(() => {
           const audio = this.$refs.audio
-          playingState ? audio.play() : audio.pause()
+          playingState
+              ? audio.play().catch(e => console.log(e))
+              : audio.pause()
         })
       }
     },

@@ -4,7 +4,7 @@
     <main>
       <p class="name">{{data.name}}</p>
       <p class="desc">
-        <span>{{singer}}</span>
+        <span>{{data.artist}}</span>
         <span> - {{data.album}}</span>
       </p>
     </main>
@@ -29,9 +29,6 @@
       index: {
         type: Number
       },
-      singer: {
-        type: String
-      }
     },
     components: {
       NIcon
