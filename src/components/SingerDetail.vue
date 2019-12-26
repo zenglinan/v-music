@@ -26,15 +26,11 @@
       ])
     },
     created() {
-      this._getSingerDetail()
+      const id = this.$route.params.id
+      this._getSingerDetail(id)
     },
     methods: {
-      _getSingerDetail() {
-        const id = this.singer.id
-        if (!id) { // 如果没有 id ，且进入了歌手详情页面，进行回退
-          this.$router.push('/singer')
-          return
-        }
+      _getSingerDetail(id) {
         getSingerDetail(id).then(res => {
           res.data.hotSongs.forEach(data => {
             this.songs.push(createSong(data))
