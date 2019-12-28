@@ -29,15 +29,6 @@
           res.data.playlist.tracks.map(data => {
             this.songs.push(createSong(data))
           })
-          // res.data.hotSongs.forEach(data => {
-          //   const artist = res.data.artist
-          //   this.artist = {
-          //     imgUrl: artist.img1v1Url,
-          //     name: artist.name
-          //   }
-          //   this.songs.push(createSong(data))
-          //   this.avatarUrl = this.artist.imgUrl
-          // })
         })
       },
     }

@@ -6,9 +6,11 @@
           <p class="title">你可能感兴趣</p>
           <ul>
             <li v-for="(item, index) in result.artists" :key="`sr_${index}`"
-                class="singers" @click="toSinger(item.id)">
+                class="singers" @click="toSinger(item)">
               <img :src="item.img1v1Url" alt="" @load="onImgLoad">
-              <p class="descript">歌手：{{item.name}}（{{item.alias[0]}}）</p>
+              <p class="descript">歌手：{{item.name}}
+                <span v-if="item.alias.length">（{{item.alias[0]}}）</span>
+              </p>
             </li>
             <li v-for="(item, index) in result.playlists" :key="`p_${index}`"
                 class="playlists" @click="toPlaylist(item.id)">
@@ -44,6 +46,7 @@
   import {mapActions} from 'vuex'
   import NScroll from '@/base/NScroll'
   import {playlistMixin} from '@/common/js/mixin'
+  import {mapMutations} from 'vuex'
 
   export default {
     name: "Suggest",
@@ -85,12 +88,18 @@
         this.$refs.scroll.$el.style.bottom = bottom
         this.$refs.scroll.refresh()
       },
-      toSinger(id){
-        this.$router.push(`/singer/${id}`)
+      toSinger(singer){
+        this.$router.push({
+          path: `/singer/${singer.id}`
+        })
+        this.setSinger(singer)
       },
       toPlaylist(id) {
         this.$router.push(`/recommand/${id}`)
       },
+      ...mapMutations({
+        'setSinger': 'SET_SIGNER'
+      }),
       ...mapActions([
         'playSong',
         'clearSong'
