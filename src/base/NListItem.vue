@@ -1,11 +1,11 @@
 <template>
   <div class="songItem" @click="emitClick">
-    <span class="id">{{index+1}}</span>
+    <span class="id" v-if="showId">{{index+1}}</span>
     <main>
-      <p class="name">{{data.name}}</p>
+      <p class="name">{{song}}</p>
       <p class="desc">
-        <span>{{data.artist}}</span>
-        <span> - {{data.album}}</span>
+        <span>{{artist}}</span>
+        <span> - {{album}}</span>
       </p>
     </main>
     <div class="options">
@@ -22,13 +22,22 @@
   export default {
     name: "NListItem",
     props: {
-      data: {
-        type: Object,
-        required: true
+      song: {
+        type: String
+      },
+      artist: {
+        type: String
+      },
+      album: {
+        type: String
       },
       index: {
         type: Number
       },
+      showId: {
+        type: Boolean,
+        default: true
+      }
     },
     components: {
       NIcon
@@ -40,7 +49,7 @@
     },
     methods: {
       emitClick(){
-        this.$emit('click', this.data, this.index)
+        this.$emit('click', this.index)
       }
     }
   }
@@ -62,6 +71,7 @@
     }
     main {
       width: 72%;
+      flex-grow: 1;
       .name {
         font-size: $font-size-medium-m;
         color: $color-text;

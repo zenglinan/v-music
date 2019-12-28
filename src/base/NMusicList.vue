@@ -15,7 +15,7 @@
           <span>播放热门歌曲</span>
         </div>
         <n-list-item class="listItem" v-for="(song, idx) in songs" :key="idx"
-                     :data="song" :index="idx"
+                     :song="song.name" :index="idx" :artist="song.artist" :album="song.album"
                      :probeType="3" :bounce="false" @click="selectSong">
         </n-list-item>
       </div>
@@ -148,7 +148,7 @@
           el.style[k] = styleObj[k]
         })
       },
-      selectSong(song, index) {
+      selectSong(index) {
         this.clearSong()
         this.playSong({
           playlist: this.songs.slice(),

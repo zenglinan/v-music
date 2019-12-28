@@ -37,6 +37,11 @@ const routes = [
     ]
   },
   {
+    name: 'search',
+    path: '/search',
+    component: () => import('../components/Search')
+  },
+  {
     path: "*",
     redirect: '/recommand'
   }

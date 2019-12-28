@@ -12,7 +12,7 @@
       </ul>
     </div>
     <div class="search">
-      <n-icon href="search"></n-icon>
+      <n-icon href="search" @click="toSearch"></n-icon>
     </div>
   </header>
 </template>
@@ -24,6 +24,11 @@
     name: "NHeader",
     components: {
       NIcon
+    },
+    methods: {
+      toSearch() {
+        this.$router.push('/search')
+      }
     }
   }
 </script>
