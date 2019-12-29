@@ -300,3 +300,5 @@ caret-color
 39. axios 并发请求
 
 40. 构造类 Result，用于处理搜索结果，构造出更合适的数据结构
+
+41. mixin

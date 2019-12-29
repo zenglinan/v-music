@@ -138,7 +138,9 @@
       ])
     },
     watch: {
-      currentSong(curSong) {
+      currentSong(curSong, preSong) {
+        console.log(curSong, preSong);
+        if(curSong.id === preSong.id) return  // 防止切换到随机模式的时候触发 curSong 变化，导致当前播放歌曲重播
         if (!curSong.id) return
         if (this.currentLyric) {
           this.currentLyric.stop()  // 切歌的时候清除原来的定时器
@@ -296,7 +298,7 @@
       },
       changeMode() {
         let curModeIndex = mode.indexOf(this.mode)
-        let tarModeIndex = (++curModeIndex) % 3
+        let tarModeIndex = (++curModeIndex) % 3 // 在三种模式之间切换
         this._setMode(mode[tarModeIndex]) // 更改 mode
         // 改变 list
         let curList
