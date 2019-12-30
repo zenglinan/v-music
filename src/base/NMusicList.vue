@@ -5,10 +5,10 @@
         <n-icon href="back" @click="back" class="back"></n-icon>
         <n-icon href="share" class="share"></n-icon>
       </header>
-      <div class="collect" ref="collect">+ 收藏</div>
+      <n-collect ref="collect" class="collect"></n-collect>
     </div>
     <div class="layer" ref="layer"></div>
-    <n-scroll :data="songs" class="scrollWrapper" ref="list" @scroll="listenToScroll">
+    <n-scroll :data="songs" class="scrollWrapper" :probe-type="3" ref="list" @scroll="listenToScroll">
       <div class="list">
         <div class="playAll" v-show="songs.length !== 0" @click="playHotSongs">
           <n-icon href="pause_b" class="icon"></n-icon>
@@ -16,7 +16,7 @@
         </div>
         <n-list-item class="listItem" v-for="(song, idx) in songs" :key="idx"
                      :song="song.name" :index="idx" :artist="song.artist" :album="song.album"
-                     :probeType="3" :bounce="false" @click="selectSong">
+                     @click="selectSong">
         </n-list-item>
       </div>
     </n-scroll>
@@ -27,6 +27,7 @@
 <script>
   import {mapActions} from 'vuex'
   import NIcon from '@/base/NIcon'
+  import NCollect from '@/base/NCollect'
   import NListItem from '@/base/NListItem'
   import NLoading from '@/base/NLoading'
   import NScroll from '@/base/NScroll'
@@ -61,7 +62,8 @@
       NIcon,
       NListItem,
       NLoading,
-      NScroll
+      NScroll,
+      NCollect
     },
     mounted() {
       this.bgImgHeight = this.$refs.bgImg.clientHeight
@@ -107,8 +109,12 @@
       back() {
         this.$router.go(-1)
       },
-      listenToScroll(pos) {
+      listenToScroll(pos, {maxScrollY}) {
         this.scrollY = pos.y
+        if(this.scrollY <= maxScrollY){
+          console.log(1);
+          this.$emit('scrollToBottom')
+        }
       },
       shrinkImgHeight() {
         this.modifyStyle(this.$refs.bgImg, {
@@ -134,19 +140,24 @@
         })
       },
       showCollectBtn() {
-        this.modifyStyle(this.$refs.collect, {
+        this.modifyStyle(this.$refs.collect.$el, {
           opacity: 1
         })
       },
       hideCollectBtn() {
-        this.modifyStyle(this.$refs.collect, {
+        this.modifyStyle(this.$refs.collect.$el, {
           opacity: 0
         })
       },
       modifyStyle(el, styleObj) {
+
+        const display = el.style.display
+        el.style.display = 'none'
         Object.keys(styleObj).map(k => {
           el.style[k] = styleObj[k]
         })
+        el.style.display = display
+
       },
       selectSong(index) {
         this.clearSong()
@@ -198,6 +209,8 @@
       font-size: $font-size-medium-x;
       transform-origin: top;
       z-index: 10;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
 
       header {
         position: absolute;
@@ -224,9 +237,6 @@
         position: absolute;
         bottom: 60px;
         right: 60px;
-        padding: 24px 40px;
-        background-color: $color-theme;
-        border-radius: 50px;
       }
     }
   }
@@ -248,6 +258,8 @@
     bottom: 0;
     width: 100%;
     z-index: 30;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 
     .list {
       padding-top: 20px;

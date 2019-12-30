@@ -302,3 +302,26 @@ caret-color
 40. 构造类 Result，用于处理搜索结果，构造出更合适的数据结构
 
 41. mixin
+
+42. 歌曲列表组件向上滑动出现的动画
+```scss
+.slideUp-enter-active, .slideUp-leave-active {
+    transition: opacity .3s;
+
+    .playlist {
+      transition: transform .4s;
+    }
+}
+
+.slideUp-enter, .slideUp-leave-to {
+    opacity: 0;
+    
+    .playlist {
+      transform: translateY(100%);
+    }
+}
+```
+
+43. 长列表滚动优化
+(1) 将列表切片展示
+(2) 将图层提示

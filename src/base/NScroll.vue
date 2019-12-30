@@ -12,7 +12,7 @@
     props: {
       probeType: {
         type: Number,
-        default: 3
+        default: 1
       },
       click: {
         type: Boolean,

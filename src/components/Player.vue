@@ -74,12 +74,13 @@
                            @click="togglePlaying"
         ></n-progress-circle>
         <n-icon :href="miniPlayingIcon" class="audio"></n-icon>
-        <n-icon href="playlist_b" class="playlist"></n-icon>
+        <n-icon href="playlist_b" class="playlist" @click="showPlaylist"></n-icon>
       </div>
     </div>
     <audio ref="audio" @canplay="audioReady" @ended="songEnd"
            @error="audioError" @timeupdate="timeUpdate"
            :src="`https://music.163.com/song/media/outer/url?id=${currentSong.id}.mp3`"></audio>
+      <playlist ref="playlist"></playlist>
   </div>
 </template>
 
@@ -93,6 +94,7 @@
   import {getLyric} from '@/api/lyric'
   import Lyric from 'lyric-parser'
   import NScroll from '@/base/NScroll'
+  import Playlist from '@/components/Playlist'
 
   export default {
     name: "Player",
@@ -104,7 +106,7 @@
         currentLyric: null, // 当前歌曲的歌词
         activeLine: 0, // 当前高亮的歌词行数
         currentShow: 'cd',
-        playingLyric: ''  // 当前播放到的歌词
+        playingLyric: '',  // 当前播放到的歌词
       }
     },
     computed: {
@@ -139,8 +141,7 @@
     },
     watch: {
       currentSong(curSong, preSong) {
-        console.log(curSong, preSong);
-        if(curSong.id === preSong.id) return  // 防止切换到随机模式的时候触发 curSong 变化，导致当前播放歌曲重播
+        if (curSong.id === preSong.id) return  // 防止切换到随机模式的时候触发 curSong 变化，导致当前播放歌曲重播
         if (!curSong.id) return
         if (this.currentLyric) {
           this.currentLyric.stop()  // 切歌的时候清除原来的定时器
@@ -164,7 +165,8 @@
       NIcon,
       NProgressBar,
       NProgressCircle,
-      NScroll
+      NScroll,
+      Playlist
     },
     methods: {
       ...mapMutations({
@@ -180,6 +182,9 @@
         m = this._pad(m)
         s = this._pad(s)
         return `${m}:${s}`
+      },
+      showPlaylist() {
+        this.$refs.playlist.ifShowPlaylist = true
       },
       _pad(time) {
         return time >= 10 ? time : `0${time}`
@@ -397,7 +402,7 @@
     .background-layer {
       opacity: 0.4;
       filter: none;
-      background: #323234;
+      background: $color-theme-g;
       position: absolute;
       left: 0px;
       top: 0px;

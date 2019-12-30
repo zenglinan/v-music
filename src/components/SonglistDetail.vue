@@ -1,5 +1,5 @@
 <template>
-  <n-music-list :songs="songs" :avatarUrl="avatarUrl"></n-music-list>
+  <n-music-list :songs="songs" :avatarUrl="avatarUrl" @scrollToBottom="getMore"></n-music-list>
 </template>
 
 <script>
@@ -13,7 +13,8 @@
     data(){
       return {
         avatarUrl: avatarLoadingUrl,
-        songs: []
+        songs: [],
+        songsCache: []
       }
     },
     components: {
@@ -26,11 +27,18 @@
       _getSonglistDetail(id) {
         getSonglistDetail(id).then(res => {
           this.avatarUrl = res.data.playlist.coverImgUrl
-          res.data.playlist.tracks.map(data => {
-            this.songs.push(createSong(data))
-          })
+          this.songsCache = res.data.playlist.tracks
+          this.createSongs()
         })
       },
+      createSongs() {
+        this.songsCache.splice(0, 30).map(data => {
+          this.songs.push(createSong(data))
+        })
+      },
+      getMore() {
+        this.createSongs()
+      }
     }
   }
 </script>
