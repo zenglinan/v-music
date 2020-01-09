@@ -17,7 +17,7 @@
         </header>
 
         <transition name="fade">
-          <main class="left" v-show="currentShow === 'cd'">
+          <main class="pic" v-show="currentShow === 'cd'">
             <div class="needle">
               <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
             </div>
@@ -27,7 +27,7 @@
           </main>
         </transition>
         <transition name="fade">
-          <n-scroll class="right" :probe-type="3" ref="lyricScroll"
+          <n-scroll class="lyric" :probe-type="3" ref="lyricScroll"
                     :data="lyricData" v-if="currentLyric"
                     v-show="currentShow === 'lyric'">
             <div class="lyricWrapper" @click="showCD">
@@ -43,9 +43,9 @@
 
         <footer class="control">
           <div class="timeBar">
-            <span class="now">{{format(currentTime)}}</span>
+            <span class="now">{{format('1',currentTime)}}</span>
             <n-progress-bar :percent="percent" @processChange="onProcessChange"></n-progress-bar>
-            <span class="end">{{format(duration)}}</span>
+            <span class="end">{{format('2',duration)}}</span>
           </div>
           <div class="controlBtn">
             <n-icon :href="mode" @click="changeMode"></n-icon>
@@ -80,7 +80,7 @@
     <audio ref="audio" @canplay="audioReady" @ended="songEnd"
            @error="audioError" @timeupdate="timeUpdate"
            :src="`https://music.163.com/song/media/outer/url?id=${currentSong.id}.mp3`"></audio>
-      <playlist ref="playlist"></playlist>
+    <playlist ref="playlist"></playlist>
   </div>
 </template>
 
@@ -176,9 +176,9 @@
         _setMode: 'SET_PLAY_MODE',
         _setPlayList: 'SET_PLAYLIST'
       }),
-      format(time) {
-        let m = Math.round(time / 60)
-        let s = Math.round(time % 60)
+      format(type, time) {
+        let m = Math.floor(time / 60)
+        let s = Math.floor(time % 60)
         m = this._pad(m)
         s = this._pad(s)
         return `${m}:${s}`
@@ -299,6 +299,9 @@
         this.$refs.audio.currentTime = curTime
         if (this.currentLyric) {
           this.currentLyric.seek(curTime * 1000)  // 拖动进度条的时候，将歌词seek到相应时间
+          if(!this.playing) {
+            this.currentLyric.stop()
+          }
         }
       },
       changeMode() {
@@ -473,7 +476,7 @@
       }
     }
 
-    main.left {
+    main.pic {
       .wrapper {
         box-sizing: border-box;
         position: absolute;
@@ -492,7 +495,7 @@
       }
     }
 
-    .right {
+    .lyric {
       position: absolute;
       top: 14vh;
       overflow: hidden;
