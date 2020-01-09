@@ -112,7 +112,6 @@
       listenToScroll(pos, {maxScrollY}) {
         this.scrollY = pos.y
         if(this.scrollY <= maxScrollY){
-          console.log(1);
           this.$emit('scrollToBottom')
         }
       },
@@ -160,7 +159,6 @@
 
       },
       selectSong(index) {
-        this.clearSong()
         this.playSong({
           playlist: this.songs.slice(),
           index
@@ -173,8 +171,7 @@
         })
       },
       ...mapActions([
-        'playSong',
-        'clearSong'
+        'playSong'
       ])
     }
   }

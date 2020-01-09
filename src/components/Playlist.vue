@@ -4,7 +4,7 @@
       <div class="bg" @click="hidePlaylist"></div>
       <div class="playlist">
         <header class="header">
-          <div class="left">
+          <div class="left" @click="playAll">
             <n-icon href="pause_b" class="play"></n-icon>
             <div class="playAll">播放全部</div>
           </div>
@@ -30,7 +30,7 @@
   import NCollect from '@/base/NCollect'
   import NListItem from '@/base/NListItem'
   import NScroll from '@/base/NScroll'
-  import {mapGetters} from 'vuex'
+  import {mapGetters, mapActions} from 'vuex'
 
   export default {
     name: "Playlist",
@@ -63,9 +63,21 @@
       hidePlaylist() {
         this.ifShowPlaylist = false
       },
-      selectSong() {
-
-      }
+      selectSong(index) {
+        this.playSong({
+          playlist: this.currentList.slice(),
+          index
+        })
+      },
+      playAll(){
+        this.playSong({
+          playlist: this.currentList.slice(),
+          index: 0
+        })
+      },
+      ...mapActions([
+        'playSong'
+      ])
     }
   }
 </script>
