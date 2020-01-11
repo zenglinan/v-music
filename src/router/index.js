@@ -37,6 +37,11 @@ const routes = [
     ]
   },
   {
+    name: 'mine',
+    path: '/mine',
+    component: () => import('../components/Mine')
+  },
+  {
     name: 'search',
     path: '/search',
     component: () => import('../components/Search')
