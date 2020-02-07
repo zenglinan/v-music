@@ -7,7 +7,7 @@
           <ul>
             <li v-for="(item, index) in result.artists" :key="`sr_${index}`"
                 class="singers" @click="toSinger(item)">
-              <img :src="item.img1v1Url" alt="" @load="onImgLoad">
+              <img :src='`${item.picUrl}?param=300x300`' alt="" @load="onImgLoad">
               <p class="descript">歌手：{{item.name}}
                 <span v-if="item.alias.length">（{{item.alias[0]}}）</span>
               </p>

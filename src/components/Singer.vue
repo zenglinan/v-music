@@ -16,7 +16,7 @@
           <li v-for="(item, idx) in hotSingers" :key="idx" class="singerItem"
               @click="toSingerDetail(item)">
             <div class="name">
-              <img v-lazy="item.img1v1Url" alt="avatar">
+              <img v-lazy='`${item.picUrl}?param=300x300`' alt="avatar">
               <span>{{item.name}}</span>
             </div>
             <div class="follow">+ 关注</div>
@@ -67,12 +67,14 @@
       _getHotSingers(limit) {
         getHotSingers(limit).then(res => {
           if (!res.data.artists.length) {
-            this.listenToScroll = () => {
-            }
+            this.listenToScroll = () => {}
           }
           this.allowToLoad = true
           this.loadingMore = false // 关闭加载动画
           this.hotSingers.push(...res.data.artists) // 每次将请求的数据拼接进数组
+          return res.artists
+        }).then(artists => {
+
         })
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {

@@ -339,7 +339,7 @@
     transition: all 0.4s;
 
     header, footer {
-      transition: all 0.3s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+      transition: all 0.3s ease-out;
     }
   }
 
