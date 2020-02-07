@@ -3,7 +3,7 @@
     <transition name="normal">
       <div class="fullPlayer" v-show="fullScreen">
         <div class="background">
-          <img :src="currentSong.albumPic" alt="">
+          <img :src='`${currentSong.albumPic}?param=200x200`' alt="">
         </div>
         <div class="background-layer"></div>
         <header>
@@ -22,7 +22,7 @@
               <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
             </div>
             <div class="wrapper" @click="showLyric">
-              <img :src="currentSong.albumPic" alt="" :class="rotateClass" class="rotate">
+              <img :src='`${currentSong.albumPic}?param=200x200`' alt="" :class="rotateClass" class="rotate">
             </div>
           </main>
         </transition>
@@ -59,7 +59,7 @@
     </transition>
     <div class="miniPlayer" v-show="!fullScreen" ref="miniPlayer">
       <div class="img" @click="setFullScreen">
-        <img :src="currentSong.albumPic" alt="image"
+        <img :src='`${currentSong.albumPic}?param=200x200`' alt="image"
              ref="miniImg" :class="rotateClass" class="rotate">
       </div>
       <main @click="setFullScreen">
