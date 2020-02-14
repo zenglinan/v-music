@@ -5,16 +5,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    name: 'mine',
-    path: '/mine',
-    component: () => import('../components/Mine')
-  },
-  {
-    name: 'mvideo',
-    path: '/mvideo',
-    component: () => import('../components/MVideo')
-  },
-  {
     name: 'singer',
     path: '/singer',
     component: () => import('../components/Singer'),
@@ -35,11 +25,6 @@ const routes = [
         component: () => import('../components/SonglistDetail')
       }
     ]
-  },
-  {
-    name: 'mine',
-    path: '/mine',
-    component: () => import('../components/Mine')
   },
   {
     name: 'search',
