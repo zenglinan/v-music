@@ -19,7 +19,7 @@
           </header>
           <ul class="list">
             <li class="listItem" v-for="(item, idx) in hotSongList" :key="idx" @click="toSonglistDetail(item.id)">
-              <img v-lazy="item.coverImgUrl" alt="image">
+              <img v-lazy="`${item.coverImgUrl}?param=150x150`" alt="image">
               <p>{{item.name}}</p>
             </li>
           </ul>

@@ -19,6 +19,9 @@
     components: {
       NHeader,
       NPlayer
+    },
+    mounted() {
+      
     }
   }
 </script>

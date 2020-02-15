@@ -22,7 +22,8 @@
               <img src="../common/images/needle.png" alt="" :class="needlePlayClass">
             </div>
             <div class="wrapper" @click="showLyric">
-              <img :src='`${currentSong.albumPic}?param=200x200`' alt="" :class="rotateClass" class="rotate">
+              <img :src='`${currentSong.albumPic}?param=200x200`'
+                   :class="rotateClass" class="rotate">
             </div>
           </main>
         </transition>

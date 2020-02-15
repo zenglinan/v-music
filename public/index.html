@@ -1,33 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>v-music</title>
-  </head>
-  <script>
-    const WIDTH = 1080   // 设计稿宽度
-    const mobileAdapter = () => {
-      let scale = screen.width/WIDTH  // 缩放比
-      let content = 'width=' + WIDTH +', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=0'
-      let meta = document.querySelector('meta[name=viewport]')
-      if(!meta) {
-        meta = document.createElement('meta')
-        meta.setAttribute('name', 'viewport')
-        document.head.appendChild(meta)
-      }
-      meta.setAttribute('content', content)
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>v-music</title>
+</head>
+<script>
+  const WIDTH = 1080   // 设计稿宽度
+  const mobileAdapter = () => {
+    let scale = screen.width / WIDTH  // 缩放比
+    let content = 'width=' + WIDTH + ', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=0'
+    let meta = document.querySelector('meta[name=viewport]')
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.setAttribute('name', 'viewport')
+      document.head.appendChild(meta)
     }
-    mobileAdapter()
-  </script>
-  <body>
-    <noscript>
-      <strong>We're sorry but v-music doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <script src="//at.alicdn.com/t/font_1564600_e6ze0iopzy4.js"></script>
-    <!-- built files will be auto injected -->
-  </body>
+    meta.setAttribute('content', content)
+  }
+  mobileAdapter()
+</script>
+<body>
+<noscript>
+  <strong>We're sorry but v-music doesn't work properly without JavaScript enabled. Please enable it to
+    continue.</strong>
+</noscript>
+<div id="app"></div>
+<script src="//at.alicdn.com/t/font_1564600_e6ze0iopzy4.js"></script>
+<script>
+  window.addEventListener('load', logData, false);
+
+  function logData() {
+    let timing = performance.timing
+    let time = {}
+
+    let start = timing.fetchStart // 起始时间
+    time.dnsTime = 0
+    time.connectTime = 0
+    time.whitePaintTime = 0
+    time.firstPaintTime = 0
+
+    time.dnsTime = timing.domainLookupEnd - timing.domainLookupStart
+    time.connectTime = timing.connectEnd - timing.connectStart
+    time.firstByte = timing.responseStart - timing.fetchStart
+    time.whitePaintTime = timing.domInteractive - start
+    time.firstPaintTime = timing.loadEventStart - start
+
+    console.log('页面加载数据统计', time)
+
+  }
+</script>
+<!-- built files will be auto injected -->
+</body>
 </html>
