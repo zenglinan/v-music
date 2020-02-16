@@ -4,9 +4,9 @@
       <div class="content" ref="content">
         <div class="swiper">
           <swiper :options="swiperOption" ref="mySwiper">
-            <swiper-slide v-for="(item, idx) in banners" :key="idx">
+            <swiper-slide v-for="(item, idx) in fakeBanners" :key="idx">
               <a href="">
-                <img :src="item.pic" alt="image" @load="onLoadImg()">
+                <img :src="item.pic" height="380px" width="100%" alt="image" @load="onLoadImg()">
               </a>
             </swiper-slide>
             <div class="swiper-pagination" slot="pagination"></div>
@@ -47,21 +47,20 @@
     mixins: [playlistMixin],
     data() {
       return {
-        banners: {},
+        banners: [],
+        fakeBanners: [],  // 只存放 banners 的第一张图的数据，用来做轮播懒加载
         hotSongList: [],
         loadingMore: false,
         allowToLoad: true,
+        bannerLoadCount: 0,
         swiperOption: {
           pagination: {
             el: '.swiper-pagination'
           },
           init: false,
           loop: true,
-          autoplay: {
-            delay: 3000,
-            disableOnInteraction: false
-          },
-        }
+          autoplay: false
+        },
       }
     },
     components: {
@@ -87,6 +86,8 @@
       _getBanners() {
         getBanners(1).then(res => { // params: Android: 1
           this.banners = res.data.banners
+          this.fakeBanners = Array(this.banners.length).fill({}, 1)
+          this.fakeBanners[0] = this.banners[1] // 只保存轮播第一张图的数据
         })
       },
       _getHotSongList() {
@@ -104,10 +105,12 @@
           this.swiper.init();
         }
       },
-      onLoadImg() { // 用来在 slide 加载完成后刷新 scroll，保证 scroll 高度计算正确
-        if (!this.checkLoaded) {
-          this.scroll && this.scroll.refresh()
-          this.checkLoaded = true
+      onLoadImg() {
+        this.bannerLoadCount += 1
+        if(
+            !this.fakeBanners[this.fakeBanners.length - 1].pic
+        ) { // 第一张图片加载完后，将 fakeBanners 设置为完整的 banners 数据
+          this.fakeBanners = this.banners
         }
       },
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
@@ -126,6 +129,13 @@
         return this.$refs.mySwiper.swiper
       }
     },
+    watch: {
+      bannerLoadCount(val) {
+        if(val === this.banners.length) { // 当图片完全加载完时，开始自动播放
+          this.$refs.mySwiper.swiper.autoplay.start()
+        }
+      }
+    }
   }
 </script>
 
@@ -158,7 +168,7 @@
 
               img {
                 border-radius: 16px;
-                width: 100%
+                width: 100%;
               }
             }
           }
