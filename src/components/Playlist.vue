@@ -8,9 +8,6 @@
             <n-icon href="pause_b" class="play"></n-icon>
             <div class="playAll">播放全部</div>
           </div>
-          <div class="right">
-            <n-collect ref="collect" class="collect" :num="25829"></n-collect>
-          </div>
         </header>
         <n-scroll :data="currentList" class="scrollWrapper" ref="scroll">
           <main>
@@ -27,7 +24,6 @@
 
 <script>
   import NIcon from '@/base/NIcon'
-  import NCollect from '@/base/NCollect'
   import NListItem from '@/base/NListItem'
   import NScroll from '@/base/NScroll'
   import {mapGetters, mapActions} from 'vuex'
@@ -41,7 +37,6 @@
     },
     components: {
       NIcon,
-      NCollect,
       NListItem,
       NScroll
     },
@@ -133,7 +128,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 24px 0 46px 0;
+        padding: 50px 0 50px 0;
 
         div.left {
           display: flex;

@@ -87,7 +87,7 @@
         getBanners(1).then(res => { // params: Android: 1
           this.banners = res.data.banners
           this.fakeBanners = Array(this.banners.length).fill({}, 1)
-          this.fakeBanners[0] = this.banners[0] // 只保存轮播第一张图的数据
+          this.fakeBanners[0] = this.banners[1] // 只保存轮播第一张图的数据
         })
       },
       _getHotSongList() {

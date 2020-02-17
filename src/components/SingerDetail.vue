@@ -42,7 +42,7 @@
           this.songs.length = 0 // 先清空原先的数组
           res.data.hotSongs.forEach(data => {
             this.songs.push(createSong(data))
-            this.avatarUrl = `${res.data.artist.picUrl}?param=300x300`
+            this.avatarUrl = `${res.data.artist[0].picUrl}?param=300x300`
           })
         })
       },

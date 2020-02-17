@@ -3,10 +3,6 @@
     <header class="header">
       <div class="top">
         <p>全部歌手</p>
-        <div class="filter">
-          <n-icon href="filter"></n-icon>
-          <span>筛选</span>
-        </div>
       </div>
       <p class="bottom">热门歌手</p>
     </header>

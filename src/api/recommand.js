@@ -15,7 +15,7 @@ export function getHotSongList(limit){
   getHotSongList.offset += limit
   return axios({
     method: 'get',
-    url: 'top/playlist',
+    url: '/top/playlist',
     params: {
       limit,
       offset: curOffset,
@@ -23,4 +23,5 @@ export function getHotSongList(limit){
     }
   })
 }
+
 getHotSongList.offset = 0

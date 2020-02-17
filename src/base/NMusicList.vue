@@ -5,7 +5,6 @@
         <n-icon href="back" @click="back" class="back"></n-icon>
         <n-icon href="share" class="share"></n-icon>
       </header>
-      <n-collect ref="collect" class="collect"></n-collect>
     </div>
     <div class="layer" ref="layer"></div>
     <n-scroll :data="songs" class="scrollWrapper" :probe-type="3" ref="list" @scroll="listenToScroll">
@@ -27,7 +26,6 @@
 <script>
   import {mapActions} from 'vuex'
   import NIcon from '@/base/NIcon'
-  import NCollect from '@/base/NCollect'
   import NListItem from '@/base/NListItem'
   import NLoading from '@/base/NLoading'
   import NScroll from '@/base/NScroll'
@@ -62,8 +60,7 @@
       NIcon,
       NListItem,
       NLoading,
-      NScroll,
-      NCollect
+      NScroll
     },
     mounted() {
       this.bgImgHeight = this.$refs.bgImg.clientHeight
@@ -87,12 +84,10 @@
         // 向下拉伸时，放大图片
         else if (curScrollY >= 0) {
           this.enlargeImg(curScrollY)
-          this.showCollectBtn()
         }
         // 正常向上滑动时，往上拉伸 layer
         else {
           this.drawLayer()
-          this.hideCollectBtn()
         }
         this.modifyStyle(this.$refs.layer, {
           transform: `translate3d(0, ${top}px, 0)`,
@@ -136,16 +131,6 @@
           paddingTop: '70%',
           height: 0,
           zIndex: zIndex.low
-        })
-      },
-      showCollectBtn() {
-        this.modifyStyle(this.$refs.collect.$el, {
-          opacity: 1
-        })
-      },
-      hideCollectBtn() {
-        this.modifyStyle(this.$refs.collect.$el, {
-          opacity: 0
         })
       },
       modifyStyle(el, styleObj) {
@@ -228,12 +213,6 @@
           right: 45px;
         }
 
-      }
-
-      .collect {
-        position: absolute;
-        bottom: 60px;
-        right: 60px;
       }
     }
   }

@@ -53,7 +53,7 @@
             <n-icon href="lastsong" @click="lastSong"></n-icon>
             <n-icon :href="playingIcon" class="play" @click="togglePlaying"></n-icon>
             <n-icon href="nextsong" @click="nextSong"></n-icon>
-            <n-icon href="playlist_w"></n-icon>
+            <n-icon href="playlist_w" @click="showPlaylist"></n-icon>
           </div>
         </footer>
       </div>
