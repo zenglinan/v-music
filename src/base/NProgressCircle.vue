@@ -38,7 +38,6 @@
         } else {
           return `${this.percent * this.round} ${this.round}`
         }
-
       }
     },
     props: {

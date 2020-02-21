@@ -130,7 +130,6 @@ this.modifyStyle(this.$refs.bgImg, {
 17. scss：@mixin 和 @extend 的区别
 @mixin 可以传递参数，@extend 不能。但 @extend 可以把多个元素的共享样式写成多元素选择器形式，如下：
 
-@mixin
 ```sass
 .button {
   background: red;

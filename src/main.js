@@ -4,9 +4,7 @@ import router from './router'
 import store from './store'
 import "./common/scss/index.scss"
 import VueLazyload from 'vue-lazyload'
-import fastclick from 'fastclick'
 
-fastclick.attach(document.body);
 Vue.use(VueLazyload, {
   preLoad: 1.2,
   error: './common/images/wyy.png',

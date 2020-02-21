@@ -15,7 +15,6 @@
         <div class="songList">
           <header>
             <h3>推荐歌单</h3>
-            <div class="square">歌单广场</div>
           </header>
           <ul class="list">
             <li class="listItem" v-for="(item, idx) in hotSongList" :key="idx" @click="toSonglistDetail(item.id)">
@@ -116,7 +115,7 @@
       listenToScroll({y: posY} = {}, {maxScrollY} = {}) {
         if (posY < maxScrollY + 20 && this.allowToLoad) {
           this.loadingMore = true // 开启加载动画
-          this.allowToLoad = false
+          this.allowToLoad = false  // 锁住标志位，防止在滑动到底时一直触发请求
           this._getHotSongList()
         }
       }
