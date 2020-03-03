@@ -25,6 +25,7 @@
     "@vue/cli-service": "^4.1.0",
     "sass": "^1.23.7",
     "sass-loader": "^8.0.0",
+    "terser-webpack-plugin": "^2.3.5",
     "vue-template-compiler": "^2.6.10"
   },
   "browserslist": [
