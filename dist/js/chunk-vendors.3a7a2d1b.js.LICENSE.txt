@@ -11,12 +11,6 @@
  */
 
 /*!
- * Vue.js v2.6.11
- * (c) 2014-2019 Evan You
- * Released under the MIT License.
- */
-
-/*!
  * better-scroll / core
  * (c) 2016-2020 ustbhuangyi
  * Released under the MIT License.

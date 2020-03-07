@@ -9,6 +9,9 @@ module.exports = {
           parallel: true  // 开启多进程打包 js
         })
       ]
+    },
+    externals: {
+      'vue': 'Vue',
     }
   }
 }
