@@ -26,7 +26,6 @@
         <n-loading v-show="loadingMore" class="loadingMore"></n-loading>
       </div>
     </n-scroll>
-    <n-loading v-show="!hotSongList.length" class="loading"></n-loading>
     <transition name="slide-fade">
       <router-view></router-view>
     </transition>

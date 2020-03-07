@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico">
+    <title></title>
+    <style>
+      body {
+        padding: 0 45px;
+      }
+    </style>
+    <script>
+      const WIDTH = 1080   // 设计稿宽度
+      const mobileAdapter = () => {
+        let scale = screen.width / WIDTH  // 缩放比
+        let content = 'width=' + WIDTH + ', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=0'
+        let meta = document.createElement('meta')
+        meta.setAttribute('name', 'viewport')
+        document.head.appendChild(meta)
+        meta.setAttribute('content', content)
+      }
+      mobileAdapter()
+    </script>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but yz_doctors doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"><!--vue-ssr-outlet--></div>
+    <script src="//at.alicdn.com/t/font_1564600_e6ze0iopzy4.js"></script>
+    <!-- built files will be auto injected -->
+  </body>
+</html>

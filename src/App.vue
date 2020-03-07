@@ -21,7 +21,7 @@
       NPlayer
     },
     mounted() {
-      
+
     }
   }
 </script>

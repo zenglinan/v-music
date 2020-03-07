@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import "./common/scss/index.scss"
 import VueLazyload from 'vue-lazyload'
+import {getHotSongList, getBanners} from './api/recommand'
 
 Vue.use(VueLazyload, {
   preLoad: 1.2,
@@ -13,8 +14,13 @@ Vue.use(VueLazyload, {
 })
 Vue.config.productionTip = false
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+Promise.all([
+  getBanners(1),
+  getHotSongList(15)
+]).then(_ => {
+  let vm = new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount("#app")
+})
