@@ -11,18 +11,7 @@
         padding: 0 45px;
       }
     </style>
-    <script>
-      const WIDTH = 1080   // 设计稿宽度
-      const mobileAdapter = () => {
-        let scale = screen.width / WIDTH  // 缩放比
-        let content = 'width=' + WIDTH + ', initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=0'
-        let meta = document.createElement('meta')
-        meta.setAttribute('name', 'viewport')
-        document.head.appendChild(meta)
-        meta.setAttribute('content', content)
-      }
-      mobileAdapter()
-    </script>
+    <script src="./flexible.js"></script>
   </head>
   <body>
     <noscript>
@@ -32,5 +21,6 @@
     <div id="app"><!--vue-ssr-outlet--></div>
     <script src="//at.alicdn.com/t/font_1564600_e6ze0iopzy4.js"></script>
     <!-- built files will be auto injected -->
+    <script src="performance.js"></script>
   </body>
 </html>
